@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList} from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity} from 'react-native';
 
 class Home extends Component {
 
@@ -18,6 +18,9 @@ class Home extends Component {
         return (
             <View style={styles.screen}>
                <Text style={styles.text}>{'Hola :)'}</Text>
+               <TouchableOpacity onPress={() => this.props.route.params.logout()}>
+                   <Text>Sign out</Text>
+               </TouchableOpacity>
             </View>
         )
     }

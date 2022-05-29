@@ -38,9 +38,9 @@ class Login extends Component {
                         Login
                     </Text>
                 </TouchableOpacity>
-                <View style={this.props.registerError ? styles.errorContainerShow : styles.errorContainerHide}>
+                <View style={this.props.loginError ? styles.errorContainerShow : styles.errorContainerHide}>
                     <AntDesign name="exclamationcircle" size={24} color="white" />
-                    <Text style={styles.errorText}>{this.props.registerError}</Text>
+                    <Text style={styles.errorText}>{this.props.loginError}</Text>
                 </View>
                 <TouchableOpacity style={styles.linkContainer} onPress={() => this.props.navigation.navigate('Register')}>
                     <Text style={styles.text}>

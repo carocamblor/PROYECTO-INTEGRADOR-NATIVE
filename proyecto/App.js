@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Register from './src/screens/Register/index'
+import StackNavigation from './src/navigation/StackNavigation';
 
 export default function App() {
   return (
     <View style={styles.app}>
-      <Register/>
+      <StackNavigation/>
     </View>
   );
 }

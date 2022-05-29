@@ -45,9 +45,9 @@ class Register extends Component {
                         Register
                     </Text>
                 </TouchableOpacity>
-                <View style={this.props.loginError ? styles.errorContainerShow : styles.errorContainerHide}>
+                <View style={this.props.registerError ? styles.errorContainerShow : styles.errorContainerHide}>
                     <AntDesign name="exclamationcircle" size={24} color="white" />
-                    <Text style={styles.errorText}>{this.props.loginError}</Text>
+                    <Text style={styles.errorText}>{this.props.registerError}</Text>
                 </View>
                 <TouchableOpacity style={styles.linkContainer} onPress={() => this.props.navigation.navigate('Login')}>
                     <Text style={styles.text}>
