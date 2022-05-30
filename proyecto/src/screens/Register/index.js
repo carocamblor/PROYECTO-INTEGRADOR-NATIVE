@@ -13,6 +13,10 @@ class Register extends Component {
         }
     }
 
+    componentDidMount(){
+        console.log("Hola1")
+    }
+
     render() {
         return (
             <View style={styles.screen}>
@@ -56,7 +60,10 @@ class Register extends Component {
                     <Text style={styles.errorText}>{this.props.registerError}</Text>
                 </View>
 
-                <TouchableOpacity style={styles.linkContainer} onPress={() => this.props.navigation.navigate('Login')}>
+                <TouchableOpacity style={styles.linkContainer} onPress={() => { 
+                    this.props.navigation.navigate('Login')
+                    this.props.cleanErrors()
+                }}>
                     <Text style={styles.text}>
                         ¿Already have an account?
                     </Text>

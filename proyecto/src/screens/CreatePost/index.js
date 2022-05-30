@@ -7,7 +7,7 @@ class CreatePost extends Component{
         super(props)
         this.state = {
             postDescription: "",
-            post: "Imagen del posteo"
+            post: ""
         }
     }
     
@@ -17,7 +17,7 @@ class CreatePost extends Component{
             // username: auth.currentUser.username,      Recordemos que cuando creamos usuarios en el metodo de registro lo hacemos unicamente con email y password
             useremail: auth.currentUser.email,           //En la coleccion de "users", el email de cada usuario aparece como "owner"
             post: this.state.post,
-            postDescription: this.state.postDescription, //Da error cuando quiero tomar los valores desde el estado!!
+            postDescription: this.state.postDescription, 
             likes: [],
             comentarios: [],
             createdAt: Date.now()
@@ -42,7 +42,7 @@ class CreatePost extends Component{
                 <TextInput
                     keyboardType="email-address"
                     placeholder="Tell us something more!"
-                    onChange={ text => 
+                    onChangeText={ text => 
                         this.setState({
                             postDescription: text
                         })
@@ -52,7 +52,7 @@ class CreatePost extends Component{
                 <TextInput
                     keyboardType="email-address"
                     placeholder="Insert your picture"
-                    onChange={ text => 
+                    onChangeText={ text => 
                         this.setState({
                             post: text
                         })

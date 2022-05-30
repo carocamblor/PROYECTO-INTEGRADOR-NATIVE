@@ -13,6 +13,11 @@ class Login extends Component {
         }
     }
 
+
+    componentDidMount(){
+        console.log("Hola2")
+    }
+
     render() {
         return (
             <View style={styles.screen}>
@@ -42,7 +47,10 @@ class Login extends Component {
                     <AntDesign name="exclamationcircle" size={24} color="white" />
                     <Text style={styles.errorText}>{this.props.loginError}</Text>
                 </View>
-                <TouchableOpacity style={styles.linkContainer} onPress={() => this.props.navigation.navigate('Register')}>
+                <TouchableOpacity style={styles.linkContainer} onPress={() => {
+                    this.props.navigation.navigate('Register')
+                    this.props.cleanErrors()
+                    }}>
                     <Text style={styles.text}>
                         ¿Don't have an account?
                     </Text>

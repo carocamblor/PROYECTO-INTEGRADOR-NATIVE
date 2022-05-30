@@ -18,7 +18,7 @@ function TabNavigation(props){
             <Tab.Screen
                 name="Home"
                 component={Home}
-                initialParams={{logout: () => props.logout(), styles: styles}}
+                initialParams={{logout: () => props.route.params.logout(), styles: styles}}
                 options={
                     {tabBarIcon: () => <AntDesign name="home" size={24} color="black" />}
                 }

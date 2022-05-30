@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigation from "./TabNavigation";
 import Login from "../screens/Login/index";
 import Register from "../screens/Register/index";
+import Comments from "../screens/Comments";
 
 // -- Importamos modulos para trabajar con Firebase -- //
 import { auth, db } from "../firebase/config";
@@ -77,6 +78,14 @@ class StackNavigation extends Component {
             .then(response => this.setState({loggedIn: false}))
             // falta un catch? --> Creo que deberiamos poner algo asi como: "No se pudo cerrar sesion. Codigo de error: (buscar si tiene un codigo el error que recibimos)"
     }
+    
+    cleanErrors(){
+        this.setState({
+            loginError: "",
+            registerError: ""
+        })
+    }
+    
 
     render(){
         return(
@@ -88,16 +97,21 @@ class StackNavigation extends Component {
                             name='TabNavigation'
                             component={ TabNavigation }
                             initialParams={ {logout: () => this.logout(), styles: this.props.styles} }
-                            />
+                        />
+                        <Stack.Screen
+                            name="Comments"
+                            component={Comments}
+                            initialParams={{}}
+                        />
                     </Stack.Group> :
                     <Stack.Group>
                         <Stack.Screen
                         name='Login'
-                        children={(props) => <Login login={(email, pass) => this.login(email, pass)} loginError={this.state.loginError} {...props} />}
+                        children={(props) => <Login cleanErrors={() => this.cleanErrors()} login={(email, pass) => this.login(email, pass)} loginError={this.state.loginError} {...props} />}
                         />
                         <Stack.Screen
                             name='Register'
-                            children={(props) => <Register register={(email, username, pass) => this.register(email, username, pass)} registerError={this.state.registerError} {...props} />}
+                            children={(props) => <Register cleanErrors={() => this.cleanErrors()} register={(email, username, pass) => this.register(email, username, pass)} registerError={this.state.registerError} {...props} />}
                         />
                     </Stack.Group>
                     }

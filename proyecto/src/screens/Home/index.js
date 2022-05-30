@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity} from 'react-native';
 
-import PostContainer from '../../components/PostContainer';
+import Post from '../../components/Post';
 import { db } from '../../firebase/config';
 //Sustituimos el pedido a Firebase por el momento con un array de posteos
 class Home extends Component {
@@ -33,10 +33,20 @@ class Home extends Component {
 
     render() {
         const {styles} = this.props.route.params
+
         console.log(this.state.posts)
         return (
             <View style={styles.screen}>
-                <PostContainer style={styles.text} posts={this.state.posts} styles={styles}/>
+                <View>
+                    <Text style={styles.containerHeader}>Welcome back! Let's check what has been going on</Text>
+                    <FlatList
+                        data={this.state.posts}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem ={({item}) =>
+                            <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
+                        }
+                    />
+                </View>
                 <TouchableOpacity onPress={() => this.props.route.params.logout()}>
                     <Text style={styles.text}>Sign out</Text>
                 </TouchableOpacity>
