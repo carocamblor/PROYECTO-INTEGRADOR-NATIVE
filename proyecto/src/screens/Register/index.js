@@ -17,7 +17,9 @@ class Register extends Component {
         return (
             <View style={styles.screen}>
             <View style={styles.container}>
+                
                 <Text style={styles.title}>Register</Text>
+
                 <TextInput
                     style={styles.input}
                     keyboardType='email-address'
@@ -25,6 +27,7 @@ class Register extends Component {
                     placeholderTextColor='white'
                     onChangeText={ text => this.setState({email: text})}
                 />
+
                 <TextInput
                     style={styles.input}
                     keyboardType='default'
@@ -32,6 +35,7 @@ class Register extends Component {
                     placeholderTextColor='white'
                     onChangeText={ text => this.setState({username: text})}
                 />
+                
                 <TextInput
                     style={styles.input}
                     keyboardType='default'
@@ -40,15 +44,18 @@ class Register extends Component {
                     secureTextEntry={false}
                     onChangeText={ text => this.setState({password: text}, () => console.log(this.state.password))}
                 />
+
                 <TouchableOpacity style={styles.button} onPress={() => this.props.register(this.state.email, this.state.username, this.state.password)}>
                     <Text style={styles.buttonText}>
                         Register
                     </Text>
                 </TouchableOpacity>
+
                 <View style={this.props.registerError ? styles.errorContainerShow : styles.errorContainerHide}>
                     <AntDesign name="exclamationcircle" size={24} color="white" />
                     <Text style={styles.errorText}>{this.props.registerError}</Text>
                 </View>
+
                 <TouchableOpacity style={styles.linkContainer} onPress={() => this.props.navigation.navigate('Login')}>
                     <Text style={styles.text}>
                         ¿Already have an account?
@@ -57,6 +64,7 @@ class Register extends Component {
                         Sign in here.
                     </Text>
                 </TouchableOpacity>
+
             </View>
             </View>
         )

@@ -1,9 +1,13 @@
+import React, { Component } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { Component } from "react";
+
+// -- Importamos las vistas que se incluyen en el StackNavigation -- //
+import TabNavigation from "./TabNavigation";
 import Login from "../screens/Login/index";
 import Register from "../screens/Register/index";
-import Home from "../screens/Home/index";
+
+// -- Importamos modulos para trabajar con Firebase -- //
 import { auth, db } from "../firebase/config";
 
 const Stack = createNativeStackNavigator();
@@ -38,9 +42,18 @@ class StackNavigation extends Component {
                     owner: email,
                     createdAt: Date.now()
                 })
-                .then(response => this.setState({loggedIn: true})) // esto va acá o en el then anterior?
-                .catch(e => this.setState({registerError: 'Error creating user.'})) // esto está bien?
+                
+                .then(response => 
+                    this.setState({
+                        loggedIn: true
+                    })) // esto va acá o en el then anterior?
+                
+                .catch(e => 
+                    this.setState({
+                        registerError: 'Error creating user.'
+                    })) // esto está bien?
             })
+
             .catch(e => {
                 let message = e.message
                 this.setState({registerError: message})
@@ -62,25 +75,19 @@ class StackNavigation extends Component {
     logout(){
         auth.signOut()
             .then(response => this.setState({loggedIn: false}))
-            // falta un catch?
+            // falta un catch? --> Creo que deberiamos poner algo asi como: "No se pudo cerrar sesion. Codigo de error: (buscar si tiene un codigo el error que recibimos)"
     }
 
     render(){
         return(
             <NavigationContainer>
-                <Stack.Navigator
-                    screenOptions={{
-                        headerShown: false
-                    }}
-                >
+                <Stack.Navigator screenOptions={{headerShown: false}}>
                     {this.state.loggedIn ?
                     <Stack.Group>
                         <Stack.Screen
-                            name='Home'
-                            component={ Home }
-                            // name='TabNavigation'
-                            // component={ TabNavigation }
-                            initialParams={ {logout: () => this.logout()} }
+                            name='TabNavigation'
+                            component={ TabNavigation }
+                            initialParams={ {logout: () => this.logout(), styles: this.props.styles} }
                             />
                     </Stack.Group> :
                     <Stack.Group>
