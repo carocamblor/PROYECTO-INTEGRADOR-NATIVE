@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity} from 'react-native';
 
 import Post from '../../components/Post';
-import { db } from '../../firebase/config';
-//Sustituimos el pedido a Firebase por el momento con un array de posteos
+import { db, auth } from '../../firebase/config';
+
 class Home extends Component {
 
     constructor(props){
@@ -15,7 +15,7 @@ class Home extends Component {
     }
 
     componentDidMount(){
-        db.collection("posts").onSnapshot(
+        db.collection("posts").orderBy("createdAt", "desc").onSnapshot(
             docs => {
                 let posts = [];
                 docs.forEach( doc => {
@@ -37,13 +37,13 @@ class Home extends Component {
         console.log(this.state.posts)
         return (
             <View style={styles.screen}>
-                <View>
-                    <Text style={styles.containerHeader}>Welcome back! Let's check what has been going on</Text>
+                <Text style={styles.containerHeader}>Welcome back! Let's check what has been going on</Text>
+                <View style={styles.prueba}>
                     <FlatList
                         data={this.state.posts}
-                        keyExtractor={item => item.id.toString()}
+                        keyExtractor={item => item.id.toString()} 
                         renderItem ={({item}) =>
-                            <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
+                            <Post postOwnerEmail={item.data.useremail} navigation={this.props.navigation} postInfo={item} styles={styles}/>
                         }
                     />
                 </View>

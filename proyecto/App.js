@@ -34,6 +34,10 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 
+  prueba: {
+    flex: 1
+  },
+
   //PostContainer Component styles
   containerHeader: {
     color: "white"

@@ -1,16 +1,33 @@
 import React, {Component} from "react";
 import {Text, View, Image, TouchableOpacity, StyleSheet} from "react-native"
+
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
+
+import {db} from "../firebase/config";
+
 
 class Post extends Component{
     constructor(props){
         super(props)
         this.state = {
             liked: true,
-            likes: 89
+            likes: 89,
+            userInfo: {}
         }
+    }
+
+    componentDidMount(){
+        db.collection("users").where("owner", "==", this.props.postOwnerEmail).onSnapshot(  //Recordemos que onSnapshot devuelve un array de resultados --> En este caso el array tendra un unico elemento!
+            docs => {
+                docs.forEach( doc => {
+                    this.setState({
+                        userInfo: doc.data()   //Como el array que devuelve onSnapshot tiene un unico elemento, es decir, la info de un cierto usuario, cargamos esta info en el estado directamente
+                    })
+                })
+            }
+        )  
     }
 
     like(){
@@ -22,11 +39,12 @@ class Post extends Component{
     }
 
     render(){
+        console.log(this.state.userInfo)
         return(
             <View style={styles.mainContainer}>
                 <View style={styles.smallContainer}>
                     <FontAwesome name="user-circle" size={24} color="white" />
-                    <Text style={styles.username}> {this.props.postInfo.data.useremail} </Text> 
+                    <Text style={styles.username}> {this.state.userInfo.username} </Text> 
                 </View>
                 
                 <View style={styles.content}>
