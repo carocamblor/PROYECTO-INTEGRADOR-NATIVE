@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { AntDesign } from '@expo/vector-icons'; 
 
 class Register extends Component {
@@ -9,12 +9,13 @@ class Register extends Component {
         this.state = {
             email: '',
             username: '',
-            password: ''
+            password: '',
+            loading: false
         }
     }
 
     componentDidMount(){
-        console.log("Hola1")
+        
     }
 
     render() {
@@ -49,11 +50,29 @@ class Register extends Component {
                     onChangeText={ text => this.setState({password: text}, () => console.log(this.state.password))}
                 />
 
-                <TouchableOpacity style={styles.button} onPress={() => this.props.register(this.state.email, this.state.username, this.state.password)}>
-                    <Text style={styles.buttonText}>
-                        Register
-                    </Text>
+                {(this.state.email !== '' && this.state.username !== '' && this.state.password !== '') ?
+
+                <TouchableOpacity style={styles.button} onPress={() => {
+                    this.props.register(this.state.email, this.state.username, this.state.password)
+                    if (this.props.registerError !== '') {
+                        this.setState({
+                            loading: true
+                        })
+                    }
+                    
+                }}>
+                        {this.state.loading ?
+                            <ActivityIndicator size='small' color='black' />:
+                            <Text style={styles.buttonText}>Register</Text>
+                        }
+                    
+                </TouchableOpacity> :
+
+                <TouchableOpacity style={styles.inactiveButton}>
+                    <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
+
+                }
 
                 <View style={this.props.registerError ? styles.errorContainerShow : styles.errorContainerHide}>
                     <AntDesign name="exclamationcircle" size={24} color="white" />
@@ -114,8 +133,20 @@ const styles = StyleSheet.create({
         borderColor: '#03DAC5',
         marginVertical: 10,
     },
+    inactiveButton: {
+        opacity: 0.5,
+        backgroundColor: '#03DAC5',
+        padding: 13,
+        textAlign: 'center',
+        borderRadius: 4,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#03DAC5',
+        marginVertical: 10,
+    },
     buttonText: {
-        fontSize: 17
+        fontSize: 17,
+        fontWeight: 'bold'
     },
     text: {
         color: 'white',

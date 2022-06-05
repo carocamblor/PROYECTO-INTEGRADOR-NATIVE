@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { AntDesign } from '@expo/vector-icons'; 
 
 class Login extends Component {
@@ -8,14 +8,15 @@ class Login extends Component {
         super(props)
         this.state = {
             email: '',
-            username: '',
-            password: ''
+            password: '',
+            loading: false,
+            emptyFields: true
         }
     }
 
 
     componentDidMount(){
-        console.log("Hola2")
+        
     }
 
     render() {
@@ -28,6 +29,7 @@ class Login extends Component {
                     keyboardType='email-address'
                     placeholder='Email'
                     placeholderTextColor='white'
+                    value={this.state.email}
                     onChangeText={ text => this.setState({email: text})}
                 />
                 <TextInput
@@ -35,14 +37,35 @@ class Login extends Component {
                     keyboardType='default'
                     placeholder='Password'
                     placeholderTextColor='white'
+                    value={this.state.password}
                     secureTextEntry={true}
                     onChangeText={ text => this.setState({password: text})}
                 />
-                <TouchableOpacity style={styles.button} onPress={() => this.props.login(this.state.email, this.state.password)}>
-                    <Text style={styles.buttonText}>
-                        Login
-                    </Text>
+
+                { (this.state.email !== '' && this.state.password != '') ?
+
+                <TouchableOpacity style={styles.button} onPress={() => {
+                    this.props.login(this.state.email, this.state.password)
+                    if (this.props.loginError !== '') {
+                        this.setState({
+                            loading: true
+                        })
+                    }
+                    
+                }}>
+                        {this.state.loading ?
+                            <ActivityIndicator size='small' color='black' />:
+                            <Text style={styles.buttonText}>Login</Text>
+                        }
+                    
+                </TouchableOpacity> :
+
+                <TouchableOpacity style={styles.inactiveButton}>
+                    <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
+
+                }
+
                 <View style={this.props.loginError ? styles.errorContainerShow : styles.errorContainerHide}>
                     <AntDesign name="exclamationcircle" size={24} color="white" />
                     <Text style={styles.errorText}>{this.props.loginError}</Text>
@@ -50,6 +73,10 @@ class Login extends Component {
                 <TouchableOpacity style={styles.linkContainer} onPress={() => {
                     this.props.navigation.navigate('Register')
                     this.props.cleanErrors()
+                    this.setState({
+                        email: '',
+                        password: ''
+                    })
                     }}>
                     <Text style={styles.text}>
                         ¿Don't have an account?
@@ -91,6 +118,17 @@ const styles = StyleSheet.create({
         fontSize: 17
     },
     button: {
+        backgroundColor: '#03DAC5',
+        padding: 13,
+        textAlign: 'center',
+        borderRadius: 4,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#03DAC5',
+        marginVertical: 10,
+    },
+    inactiveButton: {
+        opacity: 0.5,
         backgroundColor: '#03DAC5',
         padding: 13,
         textAlign: 'center',
