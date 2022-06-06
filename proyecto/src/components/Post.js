@@ -5,20 +5,43 @@ import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
 
-import {db} from "../firebase/config";
+import {db, auth} from "../firebase/config";
+import firebase from "firebase";
+
 
 
 class Post extends Component{
     constructor(props){
         super(props)
         this.state = {
-            liked: true,
-            likes: 89,
+            liked: false,
+            likes: 0,
             userInfo: {}
         }
     }
 
     componentDidMount(){
+
+        //fijarnos si el usuario que esta logueado ya le dio like al posteo
+
+        console.log(this.props.postInfo.id)
+
+        const post= this.props.postInfo.data
+        const currentUser = auth.currentUser
+
+        if (post.likes.includes(currentUser.email)) {
+            this.setState({liked:true}) 
+        }
+
+
+
+        //nos fijamos la cantidad de likes que tiene el posteo
+
+        const cantidadDeLikes = post.likes.length
+
+        this.setState({likes: cantidadDeLikes})
+
+
         db.collection("users").where("owner", "==", this.props.postOwnerEmail).onSnapshot(  //Recordemos que onSnapshot devuelve un array de resultados --> En este caso el array tendra un unico elemento!
             docs => {
                 docs.forEach( doc => {
@@ -31,11 +54,23 @@ class Post extends Component{
     }
 
     like(){
+        const documento = this.props.postInfo
+        const emailCurrentUser = auth.currentUser.email
 
+        db.collection("posts").doc (documento.id).update({
+            likes: firebase.firestore.FieldValue.arrayUnion(emailCurrentUser)
+        }).then ( response => this.setState( {liked: true , likes : this.state.likes +1 }))
+        .catch(e=> console.log(e))
     }
 
     unlike(){
+        const documento = this.props.postInfo
+        const emailCurrentUser = auth.currentUser.email
 
+        db.collection("posts").doc (documento.id).update({
+            likes: firebase.firestore.FieldValue.arrayRemove(emailCurrentUser)
+        }).then ( response => this.setState( {liked: false , likes : this.state.likes -1 }))
+        .catch(e=> console.log(e))
     }
 
     render(){
