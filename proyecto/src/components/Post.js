@@ -60,10 +60,17 @@ class Post extends Component{
         db.collection("posts").doc (documento.id).update({
             likes: firebase.firestore.FieldValue.arrayUnion(emailCurrentUser)
         }).then ( response => this.setState( {liked: true , likes : this.state.likes +1 }))
+        .catch(e=> console.log(e))
     }
 
     unlike(){
+        const documento = this.props.postInfo
+        const emailCurrentUser = auth.currentUser.email
 
+        db.collection("posts").doc (documento.id).update({
+            likes: firebase.firestore.FieldValue.arrayRemove(emailCurrentUser)
+        }).then ( response => this.setState( {liked: false , likes : this.state.likes -1 }))
+        .catch(e=> console.log(e))
     }
 
     render(){
