@@ -16,19 +16,20 @@ function TabNavigation(props){
     return(
         <Tab.Navigator screenOptions={{ tabBarShowLabel: false, headerShown: false}}> 
             <Tab.Screen
+                name="CreatePost"
+                component={CreatePost}
+                initialParams={{styles: styles}}
+                options={
+                    {tabBarIcon: () => <Feather style={styles.postIcon} name="plus-square" size={24} color="black" />}
+                }
+            />
+            
+            <Tab.Screen
                 name="Home"
                 component={Home}
                 initialParams={{logout: () => props.route.params.logout(), styles: styles}}
                 options={
                     {tabBarIcon: () => <AntDesign name="home" size={24} color="black" />}
-                }
-            />
-
-            <Tab.Screen
-                name="CreatePost"
-                component={CreatePost}
-                options={
-                    {tabBarIcon: () => <Feather style={styles.postIcon} name="plus-square" size={24} color="black" />}
                 }
             />
 

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, Text, TextInput, TouchableOpacity} from "react-native";
+import {View, Text, TextInput, TouchableOpacity, FlatList} from "react-native";
 import { auth, db } from "../../firebase/config";
 
 class CreatePost extends Component{
@@ -7,10 +7,38 @@ class CreatePost extends Component{
         super(props)
         this.state = {
             postDescription: "",
-            post: ""
+            post: "",
+            tagUsers: [],
+            show: false
         }
     }
     
+    componentDidMount(){
+        //Traer los usuarios para etiquetar
+        db.collection("users").onSnapshot(
+            docs => {
+                let users = []
+                docs.forEach(doc =>  {
+                    users.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                })
+            this.setState({
+                tagUsers: users
+            })    
+        })
+    }
+
+    tagUsers(){
+        this.state.show ?
+        this.setState({
+            show: false
+        }) :
+        this.setState({
+            show: true
+        })
+    }
 
     onSubmit(){
         db.collection("posts").add({
@@ -35,32 +63,57 @@ class CreatePost extends Component{
     }
 
     render(){
+        const {styles} = this.props.route.params
+        console.log(this.state.tagUsers)
+        console.log(this.state.show)
         // console.log(auth.currentUser.displayName) // Necesitamos antes haber creado usuarios con nombre de usuario tambien!!!!
         return(
-            <View>
-                <Text>Add a post</Text>
-                <TextInput
-                    keyboardType="email-address"
-                    placeholder="Tell us something more!"
-                    onChangeText={ text => 
-                        this.setState({
-                            postDescription: text
-                        })
-                    }
-                />
+            <View style={styles.postScreen}>
+                                
+                <View style={styles.postForm}>
+                    <Text style={styles.postTitle}>Add a post</Text>
+                
+                    <TextInput
+                        style={styles.postInput}
+                        keyboardType="email-address"
+                        placeholder="Tell us something more!"
+                        onChangeText={ text => 
+                            this.setState({
+                                postDescription: text
+                            })
+                        }
+                    />
 
-                <TextInput
-                    keyboardType="email-address"
-                    placeholder="Insert your picture"
-                    onChangeText={ text => 
-                        this.setState({
-                            post: text
-                        })
-                    }
-                />
-                <TouchableOpacity onPress={() => this.onSubmit()}>
-                    <Text>Post Picture</Text>
-                </TouchableOpacity>
+                    <TextInput
+                        style={styles.postInput}
+                        keyboardType="email-address"
+                        placeholder="Insert your picture"
+                        onChangeText={ text => 
+                            this.setState({
+                                post: text
+                            })
+                        }
+                    />
+
+                    <TouchableOpacity style={styles.tagButton} onPress={()=> this.tagUsers()}>
+                        <Text>Tag users</Text>
+                    </TouchableOpacity>
+                     <View>
+                        <FlatList
+                            style={this.state.show ? styles.show : styles.hide} //Tenemos que hacer aun los estilos!
+                            data={this.state.tagUsers}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem ={({item}) =>
+                                <Text>{item.data.username}</Text>
+                            }
+                        />
+                     </View>
+
+                    <TouchableOpacity style={styles.postButton} onPress={() => this.onSubmit()}>
+                        <Text style={styles.buttonText}>Post Picture</Text>
+                    </TouchableOpacity>
+                </View>
+                
             </View>
         )
     }
