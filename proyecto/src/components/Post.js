@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Text, View, Image, TouchableOpacity, StyleSheet} from "react-native"
+import {Text, View, Image, TouchableOpacity, StyleSheet, FlatList} from "react-native"
 
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -16,33 +16,30 @@ class Post extends Component{
         this.state = {
             liked: false,
             likes: 0,
+            comments: [],
             userInfo: {}
         }
     }
 
     componentDidMount(){
-
-        //fijarnos si el usuario que esta logueado ya le dio like al posteo
-
-        console.log(this.props.postInfo.id)
-
         const post= this.props.postInfo.data
         const currentUser = auth.currentUser
-
+        console.log(post)
         if (post.likes.includes(currentUser.email)) {
             this.setState({liked:true}) 
         }
 
-
-
-        //nos fijamos la cantidad de likes que tiene el posteo
-
         const cantidadDeLikes = post.likes.length
+        this.setState({
+            likes: cantidadDeLikes
+        })
 
-        this.setState({likes: cantidadDeLikes})
+        const comments = post.comentarios
+        this.setState({
+            comments: comments
+        })
 
-
-        db.collection("users").where("owner", "==", this.props.postOwnerEmail).onSnapshot(  //Recordemos que onSnapshot devuelve un array de resultados --> En este caso el array tendra un unico elemento!
+        db.collection("users").where("owner", "==", post.useremail).onSnapshot(  //Recordemos que onSnapshot devuelve un array de resultados --> En este caso el array tendra un unico elemento!
             docs => {
                 docs.forEach( doc => {
                     this.setState({
@@ -74,22 +71,22 @@ class Post extends Component{
     }
 
     render(){
-        console.log(this.state.userInfo)
+        console.log(this.state.comments)
         return(
             <View style={styles.mainContainer}>
-                <View style={styles.smallContainer}>
+                <View style={styles.userInfo}>
                     <FontAwesome name="user-circle" size={24} color="white" />
                     <Text style={styles.username}> {this.state.userInfo.username} </Text> 
                 </View>
                 
-                <View style={styles.content}>
-                    <Text style={styles.text}> {this.props.postInfo.data.post} </Text>
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={{uri: 'https://i.pinimg.com/474x/74/35/c1/7435c11a830d3599e3791cbae1eba0d8.jpg'}}
+                        resizeMode='contain'
+                        style={styles.image}
+                    />
                 </View>
-                <Image
-                    source={{uri: 'https://i.pinimg.com/474x/74/35/c1/7435c11a830d3599e3791cbae1eba0d8.jpg'}}
-                    resizeMode='contain'
-                    style={styles.image}
-                />
+                
                 <View style={styles.interactions}>
                     <View style={styles.smallContainer}>
                         {this.state.liked ?
@@ -108,6 +105,17 @@ class Post extends Component{
                         </TouchableOpacity>
                     </View>
                 </View>
+
+                <View style={styles.commentContainer}>
+                    <Text>Agregar comentarios</Text>
+                    <FlatList
+                        data={this.state.comments}
+                        keyExtractor={item => item.createdAt.toString()}
+                        renderItem={({item})=>
+                            <Text>{item.comment}</Text>
+                    }
+                    />
+                </View>
             </View>
         )
     }
@@ -119,14 +127,39 @@ const styles = StyleSheet.create({
         borderBottomColor: '#404040',
         display: 'flex',
         paddingVertical: 20,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        flex: 1
     },
+
+    userInfo: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: "center",
+        gap: 5,
+        flex: 5,
+    },
+
+    imageContainer: {
+        display:"flex",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingVertical: 20
+    },
+
+    interactions: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "space-evenly",
+        flex: 5,
+    },
+
     text: {
         color: 'white',
         display: 'flex',
         alignItems: 'center',
         fontSize: 17
     },
+
     username: {
         color: 'white',
         display: 'flex',
@@ -136,24 +169,22 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column'
     },
-    interactions: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-    },
+    
     smallContainer: {
         display: 'flex',
         flexDirection: 'row',
         gap: 5,
     },
+
     content: {
         marginTop: 10
     },
+
     image: {
-        width: 200,
-        height: 200,
-        marginVertical: 10,
-        borderRadius: 4
+        width: 400,
+        height: 400,
+        borderRadius: 4,
+        backgroundColor: "green"
     }
 
 })

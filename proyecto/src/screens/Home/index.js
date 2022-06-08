@@ -43,7 +43,7 @@ class Home extends Component {
                         data={this.state.posts}
                         keyExtractor={item => item.id.toString()} 
                         renderItem ={({item}) =>
-                            <Post postOwnerEmail={item.data.useremail} navigation={this.props.navigation} postInfo={item} styles={styles}/>
+                            <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
                         }
                     />
                 </View>
