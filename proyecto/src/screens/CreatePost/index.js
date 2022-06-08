@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-import {View, Text, TextInput, TouchableOpacity, FlatList} from "react-native";
+import {View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet} from "react-native";
 
 import MyCamera from "../../components/MyCamera";
 
@@ -74,8 +74,10 @@ class CreatePost extends Component{
         // console.log(auth.currentUser.displayName) // Necesitamos antes haber creado usuarios con nombre de usuario tambien!!!!
         return(
             <View style={styles.postScreen}>
-                                
-                <View style={styles.postForm}>
+                
+                <MyCamera style={styles.container}/>
+
+                {/* <View style={styles.postForm}>
                     <Text style={styles.postTitle}>Add a post</Text>
                 
                     <TextInput
@@ -100,7 +102,6 @@ class CreatePost extends Component{
                         }
                     />
 
-                    <MyCamera/>
 
                     <TouchableOpacity style={styles.tagButton} onPress={()=> this.tagUsers()}>
                         <Text>Tag users</Text>
@@ -120,7 +121,7 @@ class CreatePost extends Component{
                     <TouchableOpacity style={styles.postButton} onPress={() => this.onSubmit()}>
                         <Text style={styles.buttonText}>Post Picture</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
                 
             </View>
         )
@@ -128,3 +129,9 @@ class CreatePost extends Component{
 }
 
 export default CreatePost;
+
+const styles = StyleSheet.create({
+    container: {
+        height: 200
+    }
+})

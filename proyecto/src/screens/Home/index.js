@@ -47,9 +47,6 @@ class Home extends Component {
                         }
                     />
                 </View>
-                <TouchableOpacity onPress={() => this.props.route.params.logout()}>
-                    <Text style={styles.text}>Sign out</Text>
-                </TouchableOpacity>
             </View>
         )
     }

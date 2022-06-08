@@ -26,7 +26,7 @@ class MyCamera extends Component{
 
     render(){
         return(
-            <View>
+            <View style={styles.container}>
                 {this.state.permission ?
                 <View style={styles.container}>
                     <Camera
@@ -46,11 +46,11 @@ class MyCamera extends Component{
 
 const styles = StyleSheet.create({
     cameraBody: {
-        height: "100%",
+        flex: 9,
         backgroundColor: "red"
     },
     container: {
-        height: 200
+        flex: 1
     }
 })
 

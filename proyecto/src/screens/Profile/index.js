@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, Text} from "react-native"
+import {View, Text, TouchableOpacity} from "react-native"
 
 class Profile extends Component{
     constructor(props){
@@ -12,6 +12,11 @@ class Profile extends Component{
         return(
             <View>
                 <Text>Componente Profile</Text>
+
+                <TouchableOpacity onPress={() => this.props.route.params.logout()}>
+                    <Text>Sign out</Text>
+                </TouchableOpacity>
+
             </View>
         )
     }

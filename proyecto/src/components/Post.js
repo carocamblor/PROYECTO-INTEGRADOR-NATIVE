@@ -106,6 +106,7 @@ class Post extends Component{
                         <TouchableOpacity onPress={() => this.props.navigation.navigate("Comments", {id: this.props.postInfo.id})}>
                             <MaterialCommunityIcons name="comment-outline" size={22} color="white" />
                         </TouchableOpacity>
+                        <Text style={styles.text}>{this.props.postInfo.data.comentarios.length}</Text>
                     </View>
                 </View>
             </View>
