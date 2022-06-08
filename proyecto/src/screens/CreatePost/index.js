@@ -1,6 +1,11 @@
 import React, {Component} from "react";
+
 import {View, Text, TextInput, TouchableOpacity, FlatList} from "react-native";
+
+import MyCamera from "../../components/MyCamera";
+
 import { auth, db } from "../../firebase/config";
+
 
 class CreatePost extends Component{
     constructor(props){
@@ -95,10 +100,13 @@ class CreatePost extends Component{
                         }
                     />
 
+                    <MyCamera/>
+
                     <TouchableOpacity style={styles.tagButton} onPress={()=> this.tagUsers()}>
                         <Text>Tag users</Text>
                     </TouchableOpacity>
-                     <View>
+                     
+                    <View>
                         <FlatList
                             style={this.state.show ? styles.show : styles.hide} //Tenemos que hacer aun los estilos!
                             data={this.state.tagUsers}
@@ -107,7 +115,7 @@ class CreatePost extends Component{
                                 <Text>{item.data.username}</Text>
                             }
                         />
-                     </View>
+                    </View>
 
                     <TouchableOpacity style={styles.postButton} onPress={() => this.onSubmit()}>
                         <Text style={styles.buttonText}>Post Picture</Text>

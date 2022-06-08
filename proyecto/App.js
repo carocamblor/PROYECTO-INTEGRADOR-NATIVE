@@ -7,7 +7,6 @@ export default function App() {
   return (
     <View style={styles.app}>
       <StackNavigation styles={styles}/>
-      {/* <Prueba/> */}
     </View>
   );
 }
@@ -48,12 +47,13 @@ const styles = StyleSheet.create({
   },
 
   postForm:{
-    height: "40%",
     display: "flex",
     justifyContent: "space-evenly",
     alignItems: "center",
+    flex: 1,
     width: "auto",
-    padding: 50
+    paddingRight: 50,
+    paddingLeft: 50
   },
 
   postInput: {
@@ -112,6 +112,10 @@ const styles = StyleSheet.create({
 
   hide: {
     display: "none"
+  },
+
+  camera:{
+    height: 300
   },
 
   //PostContainer Component styles

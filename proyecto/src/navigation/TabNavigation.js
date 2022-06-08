@@ -15,6 +15,7 @@ function TabNavigation(props){
     const {styles} = props.route.params
     return(
         <Tab.Navigator screenOptions={{ tabBarShowLabel: false, headerShown: false}}> 
+            
             <Tab.Screen
                 name="CreatePost"
                 component={CreatePost}
@@ -23,7 +24,7 @@ function TabNavigation(props){
                     {tabBarIcon: () => <Feather style={styles.postIcon} name="plus-square" size={24} color="black" />}
                 }
             />
-            
+
             <Tab.Screen
                 name="Home"
                 component={Home}
