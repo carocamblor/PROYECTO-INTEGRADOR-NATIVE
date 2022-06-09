@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-import {View, Text, TextInput, TouchableOpacity, FlatList} from "react-native";
+import {View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet} from "react-native";
 
 import MyCamera from "../../components/MyCamera";
 
@@ -16,9 +16,11 @@ class CreatePost extends Component{
             tagUsers: [],
             show: false
         }
+        this.cameraMethods = undefined;
     }
     
     componentDidMount(){
+        console.log(this.props)
         //Traer los usuarios para etiquetar
         db.collection("users").onSnapshot(
             docs => {
@@ -68,39 +70,37 @@ class CreatePost extends Component{
     }
 
     render(){
-        const {styles} = this.props.route.params
         console.log(this.state.tagUsers)
         console.log(this.state.show)
-        // console.log(auth.currentUser.displayName) // Necesitamos antes haber creado usuarios con nombre de usuario tambien!!!!
         return(
             <View style={styles.postScreen}>
-                                
-                <View style={styles.postForm}>
-                    <Text style={styles.postTitle}>Add a post</Text>
                 
+                <View style={styles.titleContainer}>
+                    <Text style={styles.postTitle}>Add a Post</Text>
+                </View>
+
+                <View style={styles.cameraContainer}>
+                    <MyCamera />
+                </View>
+                {/* Me llevo el contenido de debajo a MyCamera */}
+                {/* <View style={styles.formContainer}>
                     <TextInput
                         style={styles.postInput}
                         keyboardType="email-address"
-                        placeholder="Tell us something more!"
-                        onChangeText={ text => 
-                            this.setState({
-                                postDescription: text
-                            })
-                        }
+                        placeholder=""
+                        onChangeText={text =>
+                        this.setState({
+                            postDescription: text
+                        })}
                     />
 
-                    <TextInput
-                        style={styles.postInput}
-                        keyboardType="email-address"
-                        placeholder="Insert your picture"
-                        onChangeText={ text => 
-                            this.setState({
-                                post: text
-                            })
-                        }
-                    />
+                    <TouchableOpacity style={styles.postButton} onPress={() => this.onSubmit()}>
+                        <Text style={styles.buttonText}>Post Picture</Text>
+                    </TouchableOpacity>
+                </View> */}
 
-                    <MyCamera/>
+                
+                {/*
 
                     <TouchableOpacity style={styles.tagButton} onPress={()=> this.tagUsers()}>
                         <Text>Tag users</Text>
@@ -117,14 +117,137 @@ class CreatePost extends Component{
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.postButton} onPress={() => this.onSubmit()}>
-                        <Text style={styles.buttonText}>Post Picture</Text>
-                    </TouchableOpacity>
-                </View>
+                   */}
                 
-            </View>
+            </View> 
         )
     }
 }
 
 export default CreatePost;
+
+const styles = StyleSheet.create({
+    postScreen:{
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: '#202020',
+        flex: 1,
+        width: "100%",
+    },
+
+    titleContainer: {
+        displa: "flex",
+        justifyContent: "center",
+        width: "80%",
+        textAlign: "left",
+        flex: 1,
+    },
+
+    postTitle: {
+        color: 'white',
+        fontWeight: 500,
+        fontSize: 32,
+    },
+
+    cameraContainer: {
+        height: 200,
+        width: "80%",
+        display: "flex",
+        justifyContent: "center",
+        flex: 7,
+    },
+    
+    formContainer: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        flex: 3,
+        width: "80%"
+    },
+
+    postInput: {
+        borderWidth: 1,
+        padding: 15,
+        borderColor: 'white',
+        borderStyle: 'solid',
+        borderRadius: 6,
+        marginVertical: 10,
+        color: 'white',
+        fontSize: 17,
+        width: "100%"
+    },
+
+    postButton: {
+        backgroundColor: '#03DAC5',
+        padding: 13,
+        textAlign: 'center',
+        borderRadius: 4,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#03DAC5',
+        marginVertical: 10,
+        width: "80%"
+    },
+
+    //   postForm:{
+    //     display: "flex",
+    //     justifyContent: "space-evenly",
+    //     alignItems: "center",
+    //     flex: 1,
+    //     width: "auto",
+    //     paddingRight: 50,
+    //     paddingLeft: 50
+    //   },
+    
+    //   postInput: {
+    //     borderWidth: 1,
+    //     padding: 15,
+    //     borderColor: 'white',
+    //     borderStyle: 'solid',
+    //     borderRadius: 6,
+    //     marginVertical: 10,
+    //     color: 'white',
+    //     fontSize: 17,
+    //     width: "100%"
+    //   },
+    
+    
+    //   tagButton: {
+    //     backgroundColor: '#03DAC5',
+    //     padding: 13,
+    //     textAlign: 'center',
+    //     borderRadius: 4,
+    //     borderWidth: 1,
+    //     borderStyle: 'solid',
+    //     borderColor: '#03DAC5',
+    //     marginVertical: 10,
+    //     width: "30%"
+    //   },
+    
+    //   postTitle: {
+    //     color: 'white',
+    //     fontWeight: 500,
+    //     fontSize: 32,
+    //     textAlign: "left",
+    //     width: "100%"
+    //   },
+    
+    //   buttonText: {
+    //     fontSize: 17,
+    //     fontWeight: 'bold'
+    //   },
+    
+    //   show:{
+    //     display: "flex",
+    //     backgroundColor: "red"
+    //   },
+    
+    //   hide: {
+    //     display: "none"
+    //   },
+    
+    //   camera:{
+    //     height: 300
+    //   },
+    
+})

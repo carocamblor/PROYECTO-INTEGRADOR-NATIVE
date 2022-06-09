@@ -61,7 +61,7 @@ class Register extends Component {
                     }
                     
                 }}>
-                        {this.state.loading ?
+                        {this.state.loading && this.props.registerError === '' ?
                             <ActivityIndicator size='small' color='black' />:
                             <Text style={styles.buttonText}>Register</Text>
                         }

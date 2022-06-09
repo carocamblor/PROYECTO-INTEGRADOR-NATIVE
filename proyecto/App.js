@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   //Tab Navigation Styles
   postIcon: {
     fontSize: 40,
-    backgroundColor: "yellow",
+    backgroundColor: "#03DAC5",
     padding: 10,
     borderRadius: "50%",
     marginTop: -50

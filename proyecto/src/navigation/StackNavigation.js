@@ -90,21 +90,45 @@ class StackNavigation extends Component {
     render(){
         return(
             <NavigationContainer>
-                <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Navigator>
                     {this.state.loggedIn ?
                     <Stack.Group>
                         <Stack.Screen
                             name='TabNavigation'
                             component={ TabNavigation }
                             initialParams={ {logout: () => this.logout(), styles: this.props.styles} }
+                            options={{
+                                headerStyle: {
+                                    backgroundColor: '#202020',
+                                    borderBottomColor: '#404040'
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                                headerTitleAlign: 'center',
+                                title: 'Nombre de nuestra app',
+                            }}
                         />
                         <Stack.Screen
                             name="Comments"
                             component={Comments}
                             initialParams={{}}
+                            options={{
+                                headerStyle: {
+                                    backgroundColor: '#202020',
+                                    borderBottomColor: '#404040'
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                                headerTitleAlign: 'center',
+                                title: 'Comments',
+                            }}
                         />
                     </Stack.Group> :
-                    <Stack.Group>
+                    <Stack.Group screenOptions={{headerShown: false}}>
                         <Stack.Screen
                         name='Login'
                         children={(props) => <Login cleanErrors={() => this.cleanErrors()} login={(email, pass) => this.login(email, pass)} loginError={this.state.loginError} {...props} />}

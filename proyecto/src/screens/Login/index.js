@@ -53,7 +53,7 @@ class Login extends Component {
                     }
                     
                 }}>
-                        {this.state.loading ?
+                        {this.state.loading && this.props.loginError === '' ?
                             <ActivityIndicator size='small' color='black' />:
                             <Text style={styles.buttonText}>Login</Text>
                         }
