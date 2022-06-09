@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import Profile from "../screens/Profile"
 import CreatePost from "../screens/CreatePost";
+import Search from "../screens/Search";
 
 // -- Importamos los iconos -- //
 import { AntDesign } from '@expo/vector-icons';
@@ -50,6 +51,17 @@ function TabNavigation(props){
                     {tabBarIcon: () => <AntDesign name="user" size={24} color="white" />}
                 }
             />
+            
+            <Tab.Screen
+                name="Search"
+                component={Search}
+                initialParams={{}}
+                options={
+                    {tabBarIcon: () => <AntDesign name="search1" size={24} color="white" />}
+                }
+             />
+            
+
             
         </Tab.Navigator>
     )
