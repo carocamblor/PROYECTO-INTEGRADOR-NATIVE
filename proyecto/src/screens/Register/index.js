@@ -54,11 +54,9 @@ class Register extends Component {
 
                 <TouchableOpacity style={styles.button} onPress={() => {
                     this.props.register(this.state.email, this.state.username, this.state.password)
-                    if (this.props.registerError !== '') {
                         this.setState({
                             loading: true
                         })
-                    }
                     
                 }}>
                         {this.state.loading && this.props.registerError === '' ?

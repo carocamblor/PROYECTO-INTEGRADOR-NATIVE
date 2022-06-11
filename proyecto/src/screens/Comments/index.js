@@ -1,9 +1,12 @@
 import React, {Component} from "react";
 import {View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet} from "react-native";
+import OneComment from "../../components/OneComment";
+
 import {db, auth} from "../../firebase/config";
 import firebase from "firebase";
 
 import { Feather } from '@expo/vector-icons';
+
 
 class Comments extends Component{
     constructor(props){
@@ -47,10 +50,7 @@ class Comments extends Component{
                     <FlatList
                         data={this.state.postComments}
                         keyExtractor={item => item.createdAt.toString()}
-                        renderItem={({item}) => <View style={styles.container}>
-                            <Text style={styles.username}>@username</Text>
-                            <Text style={styles.text}>{item.comment}</Text>
-                        </View>}
+                        renderItem={({item}) => <OneComment data={item} />}
                     /> :
                     <View style={styles.container}><Text style={styles.text}>No comments yet. Be the first to comment.</Text></View>
                 }

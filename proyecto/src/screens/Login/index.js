@@ -46,11 +46,9 @@ class Login extends Component {
 
                 <TouchableOpacity style={styles.button} onPress={() => {
                     this.props.login(this.state.email, this.state.password)
-                    if (this.props.loginError !== '') {
                         this.setState({
                             loading: true
                         })
-                    }
                     
                 }}>
                         {this.state.loading && this.props.loginError === '' ?

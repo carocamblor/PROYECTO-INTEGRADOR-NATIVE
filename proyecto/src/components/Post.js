@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import {Text, View, Image, TouchableOpacity, StyleSheet, FlatList} from "react-native"
 
+import OneComment from "./OneComment";
+
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
@@ -34,7 +36,7 @@ class Post extends Component{
             likes: cantidadDeLikes
         })
 
-        const comments = post.comentarios
+        const comments = post.comentarios.slice(0,2)
         this.setState({
             comments: comments
         })
@@ -108,12 +110,11 @@ class Post extends Component{
                 </View>
 
                 <View style={styles.commentContainer}>
-                    <Text>Agregar comentarios</Text>
                     <FlatList
                         data={this.state.comments}
                         keyExtractor={item => item.createdAt.toString()}
                         renderItem={({item})=>
-                            <Text>{item.comment}</Text>
+                            <OneComment data={item} />
                     }
                     />
                 </View>
@@ -127,8 +128,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#404040',
         display: 'flex',
-        paddingVertical: 20,
-        paddingHorizontal: 20,
+        paddingTop: 20,
+        // paddingHorizontal: 20,
         flex: 1
     },
 
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 5,
         flex: 5,
+        paddingLeft: 20
     },
 
     imageContainer: {
@@ -152,6 +154,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: "space-evenly",
         flex: 5,
+        paddingBottom: 20
     },
 
     text: {
