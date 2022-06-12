@@ -10,13 +10,13 @@ class MyCamera extends Component{
         this.state = {
             permission: false,
             showCamera: true,   
+            pictureAccepted: false,
             imageUri: ""
         }
         this.cameraMethods = undefined
     }
 
     componentDidMount(){
-        // console.log(auth.currentUser)
         Camera.requestCameraPermissionsAsync()
         .then( response => {
             this.setState({
@@ -58,6 +58,12 @@ class MyCamera extends Component{
             
     }
 
+    acceptPicture(){
+        this.setState({
+            pictureAccepted: true
+        })
+    }
+
     discardPicture(){
         this.setState({
             imageUri: "",
@@ -78,38 +84,49 @@ class MyCamera extends Component{
                                 takePicture = {() => this.takePicture()}
                             />
                             <View style={styles.formContainer}>
-                                <TextInput
-                                    style={styles.postInput}
-                                    keyboardType="email-address"
-                                    placeholder=""
-                                    onChangeText={text =>
-                                    this.setState({
-                                        postDescription: text
-                                    })}
-                                />
-
                                 <TouchableOpacity style={styles.postButton} onPress={() => this.takePicture()}>
                                     <Text style={styles.buttonText}>Take Picture</Text>
                                 </TouchableOpacity>
                             </View>
-                        </> :
-                        // <View style={styles.imageDisplayContainer}>
+                        </> 
+                        :
+                        this.state.pictureAccepted ?
+                            <>
+                                <Image
+                                    style={styles.imageDisplay}
+                                    source={{uri:this.state.imageUri}}
+                                />
+                                <View style={styles.formContainer}>
+                                    <TextInput
+                                        style={styles.postInput}
+                                        keyboardType="email-address"
+                                        placeholder=""
+                                        onChangeText={text =>
+                                        this.setState({
+                                            postDescription: text
+                                        })}
+                                    />
+                                    <TouchableOpacity style={styles.postButton} onPress={() => this.savePicture()}>
+                                        <Text style={styles.buttonText}>Post Picture</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </>
+                            :
+                            <>
+                                <Image
+                                    style={styles.imageDisplay}
+                                    source={{uri:this.state.imageUri}}
+                                />
+                                <View style={styles.imageOptions}>
+                                    <TouchableOpacity style={styles.acceptPhoto} onPress={() => this.acceptPicture()}>
+                                        <Text>Accept</Text>
+                                    </TouchableOpacity>
 
-                        <>
-                            <Image
-                                style={styles.imageDisplay}
-                                source={{uri:this.state.imageUri}}
-                            />
-                            <View style={styles.imageOptions}>
-                                <TouchableOpacity style={styles.acceptPhoto} onPress={() => this.savePicture()}>
-                                    <Text>Accept</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={styles.discardPhoto} onPress={() => this.discardPicture()}>
-                                    <Text>Discard</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </>
+                                    <TouchableOpacity style={styles.discardPhoto} onPress={() => this.discardPicture()}>
+                                        <Text>Discard</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </>
                 :
                 <Text>No tienes acceso a la camara</Text>    
                 }   
