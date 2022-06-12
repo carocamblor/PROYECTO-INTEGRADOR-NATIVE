@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 import { Camera } from "expo-camera";
+import { storage, auth } from "../firebase/config";
 
 class MyCamera extends Component{
     constructor(props){
@@ -15,6 +16,7 @@ class MyCamera extends Component{
     }
 
     componentDidMount(){
+        // console.log(auth.currentUser)
         Camera.requestCameraPermissionsAsync()
         .then( response => {
             this.setState({
@@ -32,8 +34,34 @@ class MyCamera extends Component{
             console.log(photo)
             this.setState({
                 imageUri: photo.uri,
-                showCamera: false                 //Tras tomar la imagen ocultamos la camara ya que vamos a querer ver la foto tomada
+                showCamera: false                    //Tras tomar la imagen ocultamos la camara ya que vamos a querer ver la foto tomada
             })
+        })
+    }
+
+    savePicture(){
+        fetch(this.state.imageUri)
+            .then(response => response.blob())
+            .then( image => {
+                const reference = storage.ref(`/userPictures/${auth.currentUser.email}/${Date.now()}.jpg`)
+                reference.put(image)                            //put() --> Uploads data to this reference's location
+                    .then(() => {
+                        reference.getDownloadURL()              //.getDownloadURL() --> Fetches a long lived download URL for this object. It works as a promise that returns the URL if found
+                            .then(url => {                      //Conseguimos al URL publica de la imagen para juntarla con el resto de datos del posteo 
+                                this.props.onImageUpload(url)   //El metodo que llega por props permite cambiar el estado del componente padre
+                            })
+                    })
+            })
+            .catch(error => {
+                console.log(`Error found: ${error}`)
+            })
+            
+    }
+
+    discardPicture(){
+        this.setState({
+            imageUri: "",
+            showCamera: true
         })
     }
 
@@ -61,15 +89,26 @@ class MyCamera extends Component{
                                 />
 
                                 <TouchableOpacity style={styles.postButton} onPress={() => this.takePicture()}>
-                                    <Text style={styles.buttonText}>Post Picture</Text>
+                                    <Text style={styles.buttonText}>Take Picture</Text>
                                 </TouchableOpacity>
                             </View>
                         </> :
+                        // <View style={styles.imageDisplayContainer}>
+
                         <>
                             <Image
                                 style={styles.imageDisplay}
                                 source={{uri:this.state.imageUri}}
                             />
+                            <View style={styles.imageOptions}>
+                                <TouchableOpacity style={styles.acceptPhoto} onPress={() => this.savePicture()}>
+                                    <Text>Accept</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.discardPhoto} onPress={() => this.discardPicture()}>
+                                    <Text>Discard</Text>
+                                </TouchableOpacity>
+                            </View>
                         </>
                 :
                 <Text>No tienes acceso a la camara</Text>    
@@ -124,10 +163,49 @@ const styles = StyleSheet.create({
         width: "80%"
     },
 
+    imageDisplayContainer: {
+        display: "flex",
+        flex: 1,
+        backgroundColor: "yellow",
+    },
+
     imageDisplay: {
-        height: 400
+        flex: 3
+    },
+
+    imageOptions: {
+        flex: 1,
+        backgroundColor: "pink",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-evenly"
+    },
+    acceptPhoto: {
+        display: "flex",
+        justifyContent: "center",
+        textAlign: 'center',
+        width: "40%",
+        height: 40,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#03DAC5',
+        marginVertical: 10,
+        backgroundColor: '#98FB98'
+    },
+    discardPhoto: {
+        display: "flex",
+        justifyContent: "center",
+        textAlign: 'center',
+        width: "40%",
+        height: 40,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#03DAC5',
+        marginVertical: 10,
+        backgroundColor: '#DC143C'
     }
-    
 })
 
 export default MyCamera

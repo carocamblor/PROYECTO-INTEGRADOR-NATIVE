@@ -14,7 +14,8 @@ class CreatePost extends Component{
             postDescription: "",
             post: "",
             tagUsers: [],
-            show: false
+            showCameraComponent: true,
+            imageUrl: ""
         }
         this.cameraMethods = undefined;
     }
@@ -34,6 +35,13 @@ class CreatePost extends Component{
             this.setState({
                 tagUsers: users
             })    
+        })
+    }
+    
+    onImageUpload(url){
+        this.setState({
+            showCameraComponent: false,
+            imageUrl: url
         })
     }
 
@@ -65,13 +73,12 @@ class CreatePost extends Component{
         })
 
         .catch(error => {
-            console.log(`El error es ${error}`)
+            console.log(`Error found: ${error}`)
         })
     }
 
     render(){
-        console.log(this.state.tagUsers)
-        console.log(this.state.show)
+        console.log(this.state.imageUrl)
         return(
             <View style={styles.postScreen}>
                 
@@ -80,45 +87,9 @@ class CreatePost extends Component{
                 </View>
 
                 <View style={styles.cameraContainer}>
-                    <MyCamera />
+                    <MyCamera onImageUpload={(url) => this.onImageUpload(url)}/>
                 </View>
-                {/* Me llevo el contenido de debajo a MyCamera */}
-                {/* <View style={styles.formContainer}>
-                    <TextInput
-                        style={styles.postInput}
-                        keyboardType="email-address"
-                        placeholder=""
-                        onChangeText={text =>
-                        this.setState({
-                            postDescription: text
-                        })}
-                    />
 
-                    <TouchableOpacity style={styles.postButton} onPress={() => this.onSubmit()}>
-                        <Text style={styles.buttonText}>Post Picture</Text>
-                    </TouchableOpacity>
-                </View> */}
-
-                
-                {/*
-
-                    <TouchableOpacity style={styles.tagButton} onPress={()=> this.tagUsers()}>
-                        <Text>Tag users</Text>
-                    </TouchableOpacity>
-                     
-                    <View>
-                        <FlatList
-                            style={this.state.show ? styles.show : styles.hide} //Tenemos que hacer aun los estilos!
-                            data={this.state.tagUsers}
-                            keyExtractor={item => item.id.toString()}
-                            renderItem ={({item}) =>
-                                <Text>{item.data.username}</Text>
-                            }
-                        />
-                    </View>
-
-                   */}
-                
             </View> 
         )
     }
@@ -150,7 +121,7 @@ const styles = StyleSheet.create({
     },
 
     cameraContainer: {
-        height: 200,
+        // height: 200,
         width: "80%",
         display: "flex",
         justifyContent: "center",
