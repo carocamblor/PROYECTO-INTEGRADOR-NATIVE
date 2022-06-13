@@ -80,11 +80,11 @@ class Post extends Component{
                     <FontAwesome name="user-circle" size={24} color="white" />
                     <Text style={styles.username}> {this.state.userInfo.username} </Text> 
                 </View>
-                
+
                 <View style={styles.imageContainer}>
                     <Image
-                        source={{uri: 'https://i.pinimg.com/474x/74/35/c1/7435c11a830d3599e3791cbae1eba0d8.jpg'}}
-                        resizeMode='contain'
+                        source={{uri: this.props.postInfo.data.photo}}
+                        resizeMode="cover"
                         style={styles.image}
                     />
                 </View>
@@ -107,6 +107,10 @@ class Post extends Component{
                         </TouchableOpacity>
                         <Text style={styles.text}>{this.props.postInfo.data.comentarios.length}</Text>
                     </View>
+                </View>
+
+                <View style={styles.captionContainer}>
+                    <Text style={styles.captionText}>{this.props.postInfo.data.postDescription}</Text>
                 </View>
 
                 <View style={styles.commentContainer}>
@@ -188,9 +192,26 @@ const styles = StyleSheet.create({
         width: 400,
         height: 400,
         borderRadius: 4,
-        backgroundColor: "green"
-    }
+    },
 
+    captionContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: "center",
+        gap: 5,
+        flex: 5,
+        paddingLeft: 20,
+        paddingVertical: 20
+    },
+
+    captionText: {
+        width: 'fit-content',
+        color: 'white',
+        display: 'inline',
+        fontSize: 17,
+        flexDirection: 'column',
+        marginRight: 8
+    }
 })
 
 export default Post;

@@ -40,7 +40,8 @@ export default OneComment;
 const styles = StyleSheet.create({
     container: {
         display: 'inline',
-        padding: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 40,
         borderBottomWidth: 1,
         borderBottomColor: '#404040',
         borderTopWidth: 1,
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column'
     },
     username: {
-        with: 'fit-content',
+        width: 'fit-content',
         color: 'white',
         display: 'inline',
         fontSize: 17,

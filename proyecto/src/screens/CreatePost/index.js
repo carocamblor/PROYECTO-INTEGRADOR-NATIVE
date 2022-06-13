@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-import {View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet} from "react-native";
+import {View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Image} from "react-native";
 
 import MyCamera from "../../components/MyCamera";
 
@@ -12,9 +12,9 @@ class CreatePost extends Component{
         super(props)
         this.state = {
             postDescription: "",
-            post: "",
             tagUsers: [],
             showCameraComponent: true,
+            showForm: false,
             imageUrl: ""
         }
         this.cameraMethods = undefined;
@@ -41,6 +41,7 @@ class CreatePost extends Component{
     onImageUpload(url){
         this.setState({
             showCameraComponent: false,
+            showForm: true,
             imageUrl: url
         })
     }
@@ -59,7 +60,7 @@ class CreatePost extends Component{
         db.collection("posts").add({
             // username: auth.currentUser.username,      Recordemos que cuando creamos usuarios en el metodo de registro lo hacemos unicamente con email y password
             useremail: auth.currentUser.email,           //En la coleccion de "users", el email de cada usuario aparece como "owner"
-            post: this.state.post,
+            photo: this.state.imageUrl,
             postDescription: this.state.postDescription, 
             likes: [],
             comentarios: [],
@@ -79,17 +80,39 @@ class CreatePost extends Component{
 
     render(){
         console.log(this.state.imageUrl)
+        const {navigate} = this.props.navigation
+
         return(
             <View style={styles.postScreen}>
                 
                 <View style={styles.titleContainer}>
                     <Text style={styles.postTitle}>Add a Post</Text>
                 </View>
-
-                <View style={styles.cameraContainer}>
-                    <MyCamera onImageUpload={(url) => this.onImageUpload(url)}/>
-                </View>
-
+                
+                    <View style={styles.cameraContainer}>
+                        <MyCamera onImageUpload={(url) => this.onImageUpload(url)}/>
+                    </View> 
+                    
+                    {this.state.showForm ?
+                        <View style={styles.formContainer}>
+                        <TextInput
+                            style={styles.postInput}
+                            keyboardType="email-address"
+                            placeholder="Tell us something"
+                            onChangeText={text =>
+                            this.setState({
+                                postDescription: text
+                            })}
+                        />
+                        <TouchableOpacity style={styles.postButton} onPress={() => { 
+                            this.onSubmit()
+                            navigate("Home")
+                        }}>
+                            <Text style={styles.buttonText}>Post Picture</Text>
+                        </TouchableOpacity>
+                    </View> :
+                    <></>
+                    }                            
             </View> 
         )
     }
@@ -160,6 +183,46 @@ const styles = StyleSheet.create({
         width: "80%"
     },
 
+    formContainer: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        flex: 1,
+        width: "100%"
+    },
+
+    imageDisplay: {
+        // flex: 3
+        height: 150
+    },
+    postInput: {
+        borderWidth: 1,
+        padding: 15,
+        borderColor: 'white',
+        borderStyle: 'solid',
+        borderRadius: 6,
+        marginVertical: 10,
+        color: 'white',
+        fontSize: 17,
+        width: "100%"
+    },
+
+    postButton: {
+        backgroundColor: '#03DAC5',
+        padding: 13,
+        textAlign: 'center',
+        borderRadius: 4,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#03DAC5',
+        marginVertical: 10,
+        width: "80%"
+    },
+
+    buttonText: {
+        fontSize: 17,
+        fontWeight: 'bold'
+    },
     //   postForm:{
     //     display: "flex",
     //     justifyContent: "space-evenly",
