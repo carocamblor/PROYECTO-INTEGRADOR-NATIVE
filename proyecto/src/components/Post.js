@@ -18,12 +18,12 @@ class Post extends Component{
         this.state = {
             liked: false,
             likes: 0,
-            comments: [],
             userInfo: {}
         }
     }
 
     componentDidMount(){
+        const idPost = this.props.postInfo.id
         const post= this.props.postInfo.data
         const currentUser = auth.currentUser
         console.log(post)
@@ -34,11 +34,6 @@ class Post extends Component{
         const cantidadDeLikes = post.likes.length
         this.setState({
             likes: cantidadDeLikes
-        })
-
-        const comments = post.comentarios.slice(0,2)
-        this.setState({
-            comments: comments
         })
 
         db.collection("users").where("owner", "==", post.useremail).onSnapshot(  //Recordemos que onSnapshot devuelve un array de resultados --> En este caso el array tendra un unico elemento!
@@ -115,10 +110,10 @@ class Post extends Component{
 
                 <View style={styles.commentContainer}>
                     <FlatList
-                        data={this.state.comments}
+                        data={this.props.postInfo.data.comentarios.slice(0,2)}
                         keyExtractor={item => item.createdAt.toString()}
                         renderItem={({item})=>
-                            <OneComment data={item} />
+                            <OneComment data={item} idPost={this.props.postInfo.id} deleteComment={()=>this.deleteComment()} newRender={() => this.props.newRender()}/>
                     }
                     />
                 </View>

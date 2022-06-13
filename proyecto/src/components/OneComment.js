@@ -1,7 +1,8 @@
 import React, {Component} from "react";
-import {Text, View, StyleSheet} from "react-native"
-import {db} from "../firebase/config";
-
+import {Text, View, StyleSheet, TouchableOpacity} from "react-native"
+import {db, auth} from "../firebase/config";
+import { Feather } from '@expo/vector-icons';
+import firebase from "firebase";
 
 class OneComment extends Component{
     constructor(props){
@@ -25,11 +26,31 @@ class OneComment extends Component{
         )  
     }
 
+    deleteComment(){
+        const idDoc = this.props.idPost
+        const dataComment = this.props.data
+        db.collection("posts").doc(idDoc).update({
+            comentarios: firebase.firestore.FieldValue.arrayRemove(dataComment)
+        }).then(() => {
+            this.props.newRender()
+            // this.props.deleteComment(dataComment.createdAt)
+        }).catch((e) => console.log(e))
+    }
+
     render(){
         return(
             <View style={styles.container}>
-                <Text style={styles.username}>@{this.state.username}</Text>
-                <Text style={styles.text}>{this.props.data.comment}</Text>
+                <View style={styles.miniContainer}>
+                    <Text style={styles.username}>@{this.state.username}</Text>
+                    <Text style={styles.text}>{this.props.data.comment}</Text>
+                </View>
+                {auth.currentUser.email === this.props.data.owner ?
+                    <TouchableOpacity onPress={() => this.deleteComment()}>
+                        <Feather name="trash-2" size={20} color="white" />
+                    </TouchableOpacity> :
+                    <></>
+                }
+                
             </View>
         )
     }
@@ -39,13 +60,18 @@ export default OneComment;
 
 const styles = StyleSheet.create({
     container: {
-        display: 'inline',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         paddingVertical: 20,
         paddingHorizontal: 40,
         borderBottomWidth: 1,
         borderBottomColor: '#404040',
         borderTopWidth: 1,
         borderTopColor: '#404040',
+    },
+    miniContainer: {
+        display: 'inline',
     },
     text: {
         with: 'fit-content',

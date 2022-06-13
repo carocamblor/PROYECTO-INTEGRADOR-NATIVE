@@ -50,7 +50,7 @@ class Comments extends Component{
                     <FlatList
                         data={this.state.postComments}
                         keyExtractor={item => item.createdAt.toString()}
-                        renderItem={({item}) => <OneComment data={item} />}
+                        renderItem={({item}) => <OneComment data={item} idPost={this.props.route.params.id} />}
                     /> :
                     <View style={styles.container}><Text style={styles.text}>No comments yet. Be the first to comment.</Text></View>
                 }
