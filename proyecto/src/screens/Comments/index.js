@@ -43,7 +43,7 @@ class Comments extends Component{
     }
 
     render(){
-        console.log(this.props)
+        console.log("Me volvi a renderizar")
         return(
             <View style={styles.screen}>
                 {this.state.postComments.length > 0 ?

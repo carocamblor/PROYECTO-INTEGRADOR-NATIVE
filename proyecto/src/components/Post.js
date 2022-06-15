@@ -6,10 +6,10 @@ import OneComment from "./OneComment";
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
+import { Feather } from '@expo/vector-icons';
 
 import {db, auth} from "../firebase/config";
 import firebase from "firebase";
-
 
 
 class Post extends Component{
@@ -48,32 +48,46 @@ class Post extends Component{
     }
 
     like(){
-        const documento = this.props.postInfo
+        const document = this.props.postInfo
         const emailCurrentUser = auth.currentUser.email
 
-        db.collection("posts").doc (documento.id).update({
+        db.collection("posts").doc (document.id).update({
             likes: firebase.firestore.FieldValue.arrayUnion(emailCurrentUser)
         }).then ( response => this.setState( {liked: true , likes : this.state.likes +1 }))
         .catch(e=> console.log(e))
     }
 
     unlike(){
-        const documento = this.props.postInfo
+        const document = this.props.postInfo
         const emailCurrentUser = auth.currentUser.email
 
-        db.collection("posts").doc (documento.id).update({
+        db.collection("posts").doc (document.id).update({
             likes: firebase.firestore.FieldValue.arrayRemove(emailCurrentUser)
         }).then ( response => this.setState( {liked: false , likes : this.state.likes -1 }))
         .catch(e=> console.log(e))
     }
 
+    deletePost(){
+        const document = this.props.postInfo
+        db.collection("posts").doc(document.id).delete()
+        .then(() => console.log("Imagen eliminada"))
+    }
+
     render(){
-        console.log(this.state.comments)
+        const postAuthor = this.props.postInfo.data.useremail
+
+        console.log(postAuthor)
         return(
             <View style={styles.mainContainer}>
                 <View style={styles.userInfo}>
                     <FontAwesome name="user-circle" size={24} color="white" />
                     <Text style={styles.username}> {this.state.userInfo.username} </Text> 
+                    {postAuthor == auth.currentUser.email ?
+                    <TouchableOpacity onPress={() => this.deletePost()}>
+                        <Feather name="trash-2" size={20} color="white" />
+                    </TouchableOpacity> :
+                    <></>
+                    }
                 </View>
 
                 <View style={styles.imageContainer}>

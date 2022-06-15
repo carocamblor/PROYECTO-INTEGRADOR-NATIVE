@@ -32,7 +32,7 @@ class OneComment extends Component{
         db.collection("posts").doc(idDoc).update({
             comentarios: firebase.firestore.FieldValue.arrayRemove(dataComment)
         }).then(() => {
-            this.props.newRender()
+            // this.props.newRender()
             // this.props.deleteComment(dataComment.createdAt)
         }).catch((e) => console.log(e))
     }
