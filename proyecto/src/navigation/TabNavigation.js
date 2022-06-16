@@ -23,14 +23,6 @@ function TabNavigation(props){
                 borderTopColor: '#404040'
             }
             }}> 
-
-            <Tab.Screen
-                name="CreatePost"
-                component={CreatePost}
-                options={
-                    {tabBarIcon: () => <Feather style={styles.postIcon} name="plus-square" size={24} color="black" />}
-                }
-            />
             
             <Tab.Screen
                 name="Home"
@@ -41,7 +33,13 @@ function TabNavigation(props){
                 }
             />
 
-            
+            <Tab.Screen
+                name="CreatePost"
+                component={CreatePost}
+                options={
+                    {tabBarIcon: () => <Feather style={styles.postIcon} name="plus-square" size={24} color="black" />}
+                }
+            />
 
             <Tab.Screen
                 name="Profile"

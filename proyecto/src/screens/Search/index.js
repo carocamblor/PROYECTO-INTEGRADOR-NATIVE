@@ -10,13 +10,38 @@ class Search extends Component{
         super(props)
         this.state = {
             searchText: "",
-            posts1: []
+            posts1: [],
+            posts2: [],
+            filteredPosts: [],
+            didSearch: false
         }
     }
+
+    componentDidMount(){
+        db.collection("posts").onSnapshot(
+            docs => {
+                let posts = [];
+                docs.forEach( doc => {
+                    posts.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                })
+                this.setState({
+                    posts2: posts
+                })
+            }
+        )
+    }
+
+    componentDidUpdate(){
+        this.manageSearch()
+    }
+
     onSubmit(){
-        db.collection("posts").where("useremail", "==", this.state.searchText).onSnapshot(
+        db.collection("posts").where("useremail", "", this.state.searchText).onSnapshot(
             docs => { 
-                let posts = [ ];
+                let posts = [];
                 docs.forEach( doc => {
                     posts.push({
                         id: doc.id,
@@ -29,8 +54,27 @@ class Search extends Component{
             }
         )
     }
+
+    manageSearch(){
+        console.log(this.state.searchText)
+
+        let posts = this.state.posts2;
+        let postsFiltered = posts.filter(post => {
+            post.data.useremail.includes(this.state.searchText)
+        } )
+
+        this.setState({
+            filteredPosts: postsFiltered //Da error aqui --> Updateamos el estado dentro de componentDidUpdate() creando un loop infinito
+        })
+
+    }
+
+    hideBar(){
+        console.log("Hide Bar")
+    }
+
     render(){
-        console.log(this.state.posts1)
+        console.log(this.state.posts2)
         return(
             <View style={styles.screen}>
                 <View style={styles.formContainer}>
@@ -42,6 +86,7 @@ class Search extends Component{
                                 searchText: text
                             })
                         }
+                        onPressIn={() => this.hideBar()} // Ver si podemos hacer que tras haber buscado el input se oculte
                         value= {this.state.searchText}
                     />
                     {this.state.searchText === '' ?
@@ -52,14 +97,15 @@ class Search extends Component{
                             <Feather name="send" size={24} color="#202020" />
                         </TouchableOpacity>
                     }
-
+                </View>
+                <View style={styles.resultsContainer}>
                     <FlatList
-                        data={this.state.posts1}
-                        keyExtractor={item => item.id.toString()} 
-                        renderItem ={({item}) =>
-                            <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
-                        }
-                    />
+                            data={this.state.filteredPosts}
+                            keyExtractor={item => item.id.toString()} 
+                            renderItem ={({item}) =>
+                                <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
+                            }
+                        />
                 </View>
             </View>
     )
@@ -67,10 +113,26 @@ class Search extends Component{
 }
 const styles = StyleSheet.create({
     screen: {
-        backgroundColor: '#202020',
+        // backgroundColor: '#202020',
+        backgroundColor: "red",
         flex: 1,
         justifyContent: 'space-between'
     },
+
+    formContainer: {
+        backgroundColor: "yellow",
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 20,
+        padding: 20,
+        borderTopWidth: 1,
+        borderTopColor: '#404040',
+    },
+
+    resultsContainer: {
+        flex: 1
+    },
+
     container: {
         display: 'flex',
         flexDirection: 'row',
@@ -79,6 +141,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#404040',
     },
+
     text: {
         color: 'white',
         display: 'flex',
@@ -87,6 +150,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column'
     },
+
     username: {
         color: 'white',
         display: 'flex',
@@ -96,6 +160,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column'
     },
+
     input: {
         borderWidth: 1,
         padding: 15,
@@ -107,6 +172,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         flex: 6
     },
+
     button: {
         backgroundColor: '#03DAC5',
         padding: 13,
@@ -117,6 +183,7 @@ const styles = StyleSheet.create({
         borderColor: '#03DAC5',
         marginVertical: 10,
     },
+
     inactiveButton: {
         opacity: 0.5,
         backgroundColor: '#03DAC5',
@@ -127,14 +194,6 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderColor: '#03DAC5',
         marginVertical: 10,
-    },
-    formContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 20,
-        padding: 20,
-        borderTopWidth: 1,
-        borderTopColor: '#404040',
     },
 })
 export default Search;

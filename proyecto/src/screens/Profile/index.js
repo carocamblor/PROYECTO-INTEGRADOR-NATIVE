@@ -12,23 +12,7 @@ class Profile extends Component{
         }
     }
 
-    componentDidMount(){
-        db.collection("posts").where("useremail", "==", auth.currentUser.email).onSnapshot(
-            docs => {
-                let posts = []
-                docs.forEach( doc => {
-                    posts.push({
-                        id: doc.id,
-                        data: doc.data()
-                    })
-                })
-            this.setState({
-                posts: posts,
-                loading: false
-            })
-            }
-        )
-    }
+  
 
     render(){
         console.log(this.state.posts)
