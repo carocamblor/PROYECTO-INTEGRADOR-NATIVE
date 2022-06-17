@@ -80,7 +80,7 @@ class CreatePost extends Component{
                     </View> 
                     
                     {this.state.showForm ?
-                        <View style={styles.formContainer}>
+                    <View style={styles.formContainer}>
                         <TextInput
                             style={styles.postInput}
                             keyboardType="email-address"
@@ -91,9 +91,9 @@ class CreatePost extends Component{
                             })}
                         />
                         <TouchableOpacity style={styles.postButton} onPress={() => { 
-                            this.onSubmit()
-                            navigate("Home")
-                        }}>
+                                this.onSubmit()
+                                navigate("Home")
+                            }}>
                             <Text style={styles.buttonText}>Post Picture</Text>
                         </TouchableOpacity>
                     </View> :
@@ -169,105 +169,14 @@ const styles = StyleSheet.create({
         width: "80%"
     },
 
-    formContainer: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-evenly",
-        flex: 1,
-        width: "100%"
-    },
-
     imageDisplay: {
         // flex: 3
         height: 150
-    },
-    postInput: {
-        borderWidth: 1,
-        padding: 15,
-        borderColor: 'white',
-        borderStyle: 'solid',
-        borderRadius: 6,
-        marginVertical: 10,
-        color: 'white',
-        fontSize: 17,
-        width: "100%"
-    },
-
-    postButton: {
-        backgroundColor: '#03DAC5',
-        padding: 13,
-        textAlign: 'center',
-        borderRadius: 4,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: '#03DAC5',
-        marginVertical: 10,
-        width: "80%"
     },
 
     buttonText: {
         fontSize: 17,
         fontWeight: 'bold'
-    },
-    //   postForm:{
-    //     display: "flex",
-    //     justifyContent: "space-evenly",
-    //     alignItems: "center",
-    //     flex: 1,
-    //     width: "auto",
-    //     paddingRight: 50,
-    //     paddingLeft: 50
-    //   },
-    
-    //   postInput: {
-    //     borderWidth: 1,
-    //     padding: 15,
-    //     borderColor: 'white',
-    //     borderStyle: 'solid',
-    //     borderRadius: 6,
-    //     marginVertical: 10,
-    //     color: 'white',
-    //     fontSize: 17,
-    //     width: "100%"
-    //   },
-    
-    
-    //   tagButton: {
-    //     backgroundColor: '#03DAC5',
-    //     padding: 13,
-    //     textAlign: 'center',
-    //     borderRadius: 4,
-    //     borderWidth: 1,
-    //     borderStyle: 'solid',
-    //     borderColor: '#03DAC5',
-    //     marginVertical: 10,
-    //     width: "30%"
-    //   },
-    
-    //   postTitle: {
-    //     color: 'white',
-    //     fontWeight: 500,
-    //     fontSize: 32,
-    //     textAlign: "left",
-    //     width: "100%"
-    //   },
-    
-    //   buttonText: {
-    //     fontSize: 17,
-    //     fontWeight: 'bold'
-    //   },
-    
-    //   show:{
-    //     display: "flex",
-    //     backgroundColor: "red"
-    //   },
-    
-    //   hide: {
-    //     display: "none"
-    //   },
-    
-    //   camera:{
-    //     height: 300
-    //   },
+    }
     
 })

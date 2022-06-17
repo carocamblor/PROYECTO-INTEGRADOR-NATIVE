@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
         flex: 1,
         display: "flex",
         justifyContent: "center",
-        backgroundColor: "yellow"
     },
 
     cameraBody: {
@@ -174,10 +173,10 @@ const styles = StyleSheet.create({
 
     imageOptions: {
         flex: 1,
-        backgroundColor: "pink",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-evenly"
+        justifyContent: "space-evenly",
+        alignItems: "center"
     },
     acceptPhoto: {
         display: "flex",
