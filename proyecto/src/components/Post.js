@@ -26,7 +26,7 @@ class Post extends Component{
         const idPost = this.props.postInfo.id
         const post= this.props.postInfo.data
         const currentUser = auth.currentUser
-        console.log(post)
+        
         if (post.likes.includes(currentUser.email)) {
             this.setState({liked:true}) 
         }
@@ -75,8 +75,6 @@ class Post extends Component{
 
     render(){
         const postAuthor = this.props.postInfo.data.useremail
-
-        console.log(postAuthor)
         return(
             <View style={styles.mainContainer}>
                 <View style={styles.userInfo}>

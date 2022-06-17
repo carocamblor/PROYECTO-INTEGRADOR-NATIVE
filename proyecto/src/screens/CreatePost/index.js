@@ -13,53 +13,38 @@ class CreatePost extends Component{
         this.state = {
             postDescription: "",
             tagUsers: [],
-            showCameraComponent: true,
             showForm: false,
-            imageUrl: ""
+            imageUrl: "",
+
+            //Manage child state
+            showCamera: true,
+            pictureAccepted: false
         }
         this.cameraMethods = undefined;
     }
     
-    componentDidMount(){
-        console.log(this.props)
-        //Traer los usuarios para etiquetar
-        db.collection("users").onSnapshot(
-            docs => {
-                let users = []
-                docs.forEach(doc =>  {
-                    users.push({
-                        id: doc.id,
-                        data: doc.data()
-                    })
-                })
-            this.setState({
-                tagUsers: users
-            })    
-        })
-    }
     
     onImageUpload(url){
         this.setState({
-            showCameraComponent: false,
             showForm: true,
-            imageUrl: url
+            imageUrl: url,
+            pictureAccepted: true
         })
     }
 
-    tagUsers(){
-        this.state.show ?
+    manageChildCamera(bool){
+        bool ?
         this.setState({
-            show: false
+            showCamera: false
         }) :
         this.setState({
-            show: true
+            showCamera: true
         })
     }
 
     onSubmit(){
         db.collection("posts").add({
-            // username: auth.currentUser.username,      Recordemos que cuando creamos usuarios en el metodo de registro lo hacemos unicamente con email y password
-            useremail: auth.currentUser.email,           //En la coleccion de "users", el email de cada usuario aparece como "owner"
+            useremail: auth.currentUser.email,          
             photo: this.state.imageUrl,
             postDescription: this.state.postDescription, 
             likes: [],
@@ -69,7 +54,10 @@ class CreatePost extends Component{
 
         .then(response => {
             this.setState({
-                
+                imageUrl: "",                            //Once the picture is posted, we clear the state
+                showCamera: true,
+                showForm: false,
+                pictureAccepted: false                  //Tras postear la imagen reinicio a false el picture accepted    
             })
         })
 
@@ -79,9 +67,7 @@ class CreatePost extends Component{
     }
 
     render(){
-        console.log(this.state.imageUrl)
         const {navigate} = this.props.navigation
-
         return(
             <View style={styles.postScreen}>
                 
@@ -90,7 +76,7 @@ class CreatePost extends Component{
                 </View>
                 
                     <View style={styles.cameraContainer}>
-                        <MyCamera onImageUpload={(url) => this.onImageUpload(url)}/>
+                        <MyCamera manageChildCamera={(bool) => this.manageChildCamera(bool)} onImageUpload={(url) => this.onImageUpload(url)} showCamera={this.state.showCamera} childImageUri={this.state.childImageUri} pictureAccepted={this.state.pictureAccepted}/>
                     </View> 
                     
                     {this.state.showForm ?

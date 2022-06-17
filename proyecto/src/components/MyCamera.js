@@ -9,8 +9,6 @@ class MyCamera extends Component{
         super(props)
         this.state = {
             permission: false,
-            showCamera: true,   
-            pictureAccepted: false,
             imageUri: ""
         }
         this.cameraMethods = undefined
@@ -31,11 +29,10 @@ class MyCamera extends Component{
     takePicture(){
         this.cameraMethods.takePictureAsync()
         .then(photo => {
-            console.log(photo)
             this.setState({
                 imageUri: photo.uri,
-                showCamera: false                    //Tras tomar la imagen ocultamos la camara ya que vamos a querer ver la foto tomada
-            })
+            },
+            () => this.props.manageChildCamera(true)) //De esta manera oculto la camara
         })
     }
 
@@ -55,9 +52,6 @@ class MyCamera extends Component{
             .catch(error => {
                 console.log(`Error found: ${error}`)
             })
-        this.setState({
-            pictureAccepted: true
-        })
     }
 
     discardPicture(){
@@ -65,19 +59,19 @@ class MyCamera extends Component{
             imageUri: "",
             showCamera: true
         })
+        this.props.manageChildCamera(false)
     }
 
     render(){
         return(
             <View style={styles.container}>
                 {this.state.permission ?
-                    this.state.showCamera ?
+                    this.props.showCamera ?
                         <>
                             <Camera
                                 style={styles.cameraBody}
                                 type={Camera.Constants.Type.back}
                                 ref={cameraMethods => this.cameraMethods = cameraMethods}
-                                takePicture = {() => this.takePicture()}
                             />
                             <View style={styles.formContainer}>
                                 <TouchableOpacity style={styles.postButton} onPress={() => this.takePicture()}>
@@ -86,11 +80,11 @@ class MyCamera extends Component{
                             </View>
                         </> 
                         :
-                        this.state.pictureAccepted ?
+                        this.props.pictureAccepted ?
                             <>
                                 <Image
-                                    style={styles.imageDisplay}
-                                    source={{uri:this.state.imageUri}}
+                                    style={styles.imageDisplayPost}
+                                    source={{uri:this.state.imageUri}} //Por que antes tomabamos la URI desde props?
                                 />
                             </>
                             :
@@ -123,7 +117,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: "yellow"
     },
 
     cameraBody: {
@@ -166,6 +161,11 @@ const styles = StyleSheet.create({
         display: "flex",
         flex: 1,
         backgroundColor: "yellow",
+    },
+
+    imageDisplayPost: {
+        flex: 2,
+        backgroundColor: "red"
     },
 
     imageDisplay: {
