@@ -84,7 +84,7 @@ class MyCamera extends Component{
                             <>
                                 <Image
                                     style={styles.imageDisplayPost}
-                                    source={{uri:this.state.imageUri}} //Por que antes tomabamos la URI desde props?
+                                    source={{uri:this.state.imageUri}} //Por que antes tomabamos la URI desde props? --> Cada vez que sacamos una foto nueva, se cambio el valor del estado a la URI de la nueva foto, por lo que no es necesario traer la data por props
                                 />
                             </>
                             :

@@ -34,9 +34,9 @@ class Search extends Component{
         )
     }
 
-    componentDidUpdate(){
-        this.manageSearch()
-    }
+    // componentDidUpdate(){
+    //     this.manageSearch()
+    // }
 
     onSubmit(){
         db.collection("posts").where("useremail", "", this.state.searchText).onSnapshot(
@@ -55,16 +55,15 @@ class Search extends Component{
         )
     }
 
-    manageSearch(){
-        console.log(this.state.searchText)
-
+    manageSearch(searchInput){
         let posts = this.state.posts2;
-        let postsFiltered = posts.filter(post => {
-            post.data.useremail.includes(this.state.searchText)
-        } )
+
+        let postsFiltered = posts.filter(function(post){
+            return post.data.useremail.toLowerCase().includes(searchInput.toLowerCase())
+        })
 
         this.setState({
-            filteredPosts: postsFiltered //Da error aqui --> Updateamos el estado dentro de componentDidUpdate() creando un loop infinito
+            filteredPosts: postsFiltered
         })
 
     }
@@ -74,7 +73,6 @@ class Search extends Component{
     }
 
     render(){
-        console.log(this.state.posts2)
         return(
             <View style={styles.screen}>
                 <View style={styles.formContainer}>
@@ -84,19 +82,20 @@ class Search extends Component{
                         onChangeText={ text =>
                             this.setState({
                                 searchText: text
-                            })
+                            },
+                            () => this.manageSearch(text))
                         }
                         onPressIn={() => this.hideBar()} // Ver si podemos hacer que tras haber buscado el input se oculte
                         value= {this.state.searchText}
                     />
-                    {this.state.searchText === '' ?
+                    {/* {this.state.searchText === '' ?
                         <TouchableOpacity style={styles.inactiveButton}>
                             <Feather name="send" size={24} color="#202020" />
                         </TouchableOpacity> :
                         <TouchableOpacity style={styles.button} onPress={() => this.onSubmit()}>
                             <Feather name="send" size={24} color="#202020" />
                         </TouchableOpacity>
-                    }
+                    } */}
                 </View>
                 <View style={styles.resultsContainer}>
                     <FlatList
@@ -113,14 +112,12 @@ class Search extends Component{
 }
 const styles = StyleSheet.create({
     screen: {
-        // backgroundColor: '#202020',
-        backgroundColor: "red",
+        backgroundColor: '#202020',
         flex: 1,
         justifyContent: 'space-between'
     },
 
     formContainer: {
-        backgroundColor: "yellow",
         display: 'flex',
         flexDirection: 'row',
         gap: 20,
