@@ -57,19 +57,17 @@ class Search extends Component{
 
     manageSearch(searchInput){
         let posts = this.state.posts2;
-
-        let postsFiltered = posts.filter(function(post){
-            return post.data.useremail.toLowerCase().includes(searchInput.toLowerCase())
-        })
-
+        let postsFiltered = []
+        
+        if (searchInput != ""){
+            postsFiltered = posts.filter(function(post){
+                return post.data.useremail.toLowerCase().includes(searchInput.toLowerCase())
+            })
+        }
+        
         this.setState({
             filteredPosts: postsFiltered
-        })
-
-    }
-
-    hideBar(){
-        console.log("Hide Bar")
+        })  
     }
 
     render(){
@@ -83,19 +81,12 @@ class Search extends Component{
                             this.setState({
                                 searchText: text
                             },
-                            () => this.manageSearch(text))
+                            () => {
+                                console.log(text)
+                                this.manageSearch(text)})
                         }
-                        onPressIn={() => this.hideBar()} // Ver si podemos hacer que tras haber buscado el input se oculte
                         value= {this.state.searchText}
                     />
-                    {/* {this.state.searchText === '' ?
-                        <TouchableOpacity style={styles.inactiveButton}>
-                            <Feather name="send" size={24} color="#202020" />
-                        </TouchableOpacity> :
-                        <TouchableOpacity style={styles.button} onPress={() => this.onSubmit()}>
-                            <Feather name="send" size={24} color="#202020" />
-                        </TouchableOpacity>
-                    } */}
                 </View>
                 <View style={styles.resultsContainer}>
                     <FlatList
