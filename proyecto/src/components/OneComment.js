@@ -3,6 +3,7 @@ import {Text, View, StyleSheet, TouchableOpacity} from "react-native"
 import {db, auth} from "../firebase/config";
 import { Feather } from '@expo/vector-icons';
 import firebase from "firebase";
+import moment from "moment"
 
 class OneComment extends Component{
     constructor(props){
@@ -38,20 +39,27 @@ class OneComment extends Component{
     }
 
     render(){
+        const date = moment(this.props.data.createdAt).format("MMMM D, YYYY");
         return(
-            <View style={styles.container}>
-                <View style={styles.miniContainer}>
-                    <Text style={styles.username}>@{this.state.username}</Text>
-                    <Text style={styles.text}>{this.props.data.comment}</Text>
+
+            <View style={styles.mainContainer}>
+                <View style={styles.container}>
+                    <View style={styles.miniContainer}>
+                        <Text style={styles.username}>@{this.state.username}</Text>
+                        <Text style={styles.text}>{this.props.data.comment}</Text>
+                    </View>
+                    {auth.currentUser.email === this.props.data.owner ?
+                        <TouchableOpacity onPress={() => this.deleteComment()}>
+                            <Feather name="trash-2" size={20} color="white" />
+                        </TouchableOpacity> :
+                        <></>
+                    }
                 </View>
-                {auth.currentUser.email === this.props.data.owner ?
-                    <TouchableOpacity onPress={() => this.deleteComment()}>
-                        <Feather name="trash-2" size={20} color="white" />
-                    </TouchableOpacity> :
-                    <></>
-                }
-                
+                <Text style={styles.date}>{date}</Text>
             </View>
+
+
+
         )
     }
 }
@@ -59,16 +67,18 @@ class OneComment extends Component{
 export default OneComment;
 
 const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 20,
-        paddingHorizontal: 40,
+    mainContainer: {
         borderBottomWidth: 1,
         borderBottomColor: '#404040',
         borderTopWidth: 1,
         borderTopColor: '#404040',
+        paddingVertical: 20,
+        paddingHorizontal: 40,
+    },
+    container: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     miniContainer: {
         display: 'inline',
@@ -79,6 +89,13 @@ const styles = StyleSheet.create({
         fontSize: 17,
         display: 'inline',
         flexDirection: 'column'
+    },
+    date: {
+        color: '#808080',
+        fontSize: 17,
+        display: 'inline',
+        flexDirection: 'column',
+        marginTop: 5
     },
     username: {
         width: 'fit-content',

@@ -11,6 +11,7 @@ import { Feather } from '@expo/vector-icons';
 import {db, auth} from "../firebase/config";
 import firebase from "firebase";
 
+import moment from "moment";
 
 class Post extends Component{
     constructor(props){
@@ -64,20 +65,23 @@ class Post extends Component{
         db.collection("posts").doc (document.id).update({
             likes: firebase.firestore.FieldValue.arrayRemove(emailCurrentUser)
         }).then ( response => this.setState( {liked: false , likes : this.state.likes -1 }))
-        .catch(e=> console.log(e))
+        .catch(e => console.log(e))
     }
 
     deletePost(){
         const document = this.props.postInfo
         db.collection("posts").doc(document.id).delete()
         .then(() => console.log("Imagen eliminada"))
+        .catch(error => console.log(error))
     }
 
     render(){
         const postAuthor = this.props.postInfo.data.useremail
+        const date = moment(this.props.postInfo.data.createdAt).format("MMMM D, YYYY");
         return(
             <View style={styles.mainContainer}>
-                <View style={styles.userInfo}>
+                <View style={styles.userInfoContainer}>
+                    <View style={styles.userInfo}>
                     <FontAwesome name="user-circle" size={24} color="white" />
                     <Text style={styles.username}> {this.state.userInfo.username} </Text> 
                     {postAuthor == auth.currentUser.email ?
@@ -86,7 +90,11 @@ class Post extends Component{
                     </TouchableOpacity> :
                     <></>
                     }
+                    </View>
+                    <Text style={styles.date}>{date}</Text>
                 </View>
+
+
 
                 <View style={styles.imageContainer}>
                     <Image
@@ -115,17 +123,20 @@ class Post extends Component{
                         <Text style={styles.text}>{this.props.postInfo.data.comentarios.length}</Text>
                     </View>
                 </View>
-
+                
+                {this.props.postInfo.data.postDescription ? 
                 <View style={styles.captionContainer}>
                     <Text style={styles.captionText}>{this.props.postInfo.data.postDescription}</Text>
-                </View>
+                </View> :
+                <></>
+                }
 
                 <View style={styles.commentContainer}>
                     <FlatList
                         data={this.props.postInfo.data.comentarios.slice(0,2)}
                         keyExtractor={item => item.createdAt.toString()}
                         renderItem={({item})=>
-                            <OneComment data={item} idPost={this.props.postInfo.id} deleteComment={()=>this.deleteComment()} newRender={() => this.props.newRender()}/>
+                            <OneComment data={item} idPost={this.props.postInfo.id} deleteComment={()=>this.deleteComment()}/>
                     }
                     />
                 </View>
@@ -144,15 +155,21 @@ const styles = StyleSheet.create({
         flex: 1
     },
 
-    userInfo: {
+    userInfoContainer: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: "center",
-        gap: 5,
+        justifyContent: 'space-between',
+        gap: 10,
         flex: 5,
-        paddingLeft: 20
+        paddingHorizontal: 20,
+        width: '100%'
     },
-
+    userInfo: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 7
+    },
     imageContainer: {
         display:"flex",
         justifyContent: "center",
@@ -177,12 +194,11 @@ const styles = StyleSheet.create({
 
     username: {
         color: 'white',
-        display: 'flex',
+        display: 'inline',
         alignItems: 'center',
         fontSize: 17,
         fontWeight: 500,
-        display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     
     smallContainer: {
@@ -218,7 +234,13 @@ const styles = StyleSheet.create({
         fontSize: 17,
         flexDirection: 'column',
         marginRight: 8
-    }
+    },
+    date: {
+        color: '#808080',
+        fontSize: 17,
+        flexDirection: 'column',
+        marginTop: 5,
+    },
 })
 
 export default Post;

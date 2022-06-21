@@ -76,7 +76,7 @@ class StackNavigation extends Component {
     logout(){
         auth.signOut()
             .then(response => this.setState({loggedIn: false}))
-            // falta un catch? --> Creo que deberiamos poner algo asi como: "No se pudo cerrar sesion. Codigo de error: (buscar si tiene un codigo el error que recibimos)"
+            .catch(e => console.log(e))
     }
     
     cleanErrors(){
@@ -107,7 +107,7 @@ class StackNavigation extends Component {
                                     fontWeight: 'bold',
                                 },
                                 headerTitleAlign: 'center',
-                                title: 'Nombre de nuestra app',
+                                title: 'Bee Yourself',
                             }}
                         />
                         <Stack.Screen
@@ -130,8 +130,8 @@ class StackNavigation extends Component {
                     </Stack.Group> :
                     <Stack.Group screenOptions={{headerShown: false}}>
                         <Stack.Screen
-                        name='Login'
-                        children={(props) => <Login cleanErrors={() => this.cleanErrors()} login={(email, pass) => this.login(email, pass)} loginError={this.state.loginError} {...props} />}
+                            name='Login'
+                            children={(props) => <Login cleanErrors={() => this.cleanErrors()} login={(email, pass) => this.login(email, pass)} loginError={this.state.loginError} {...props} />}
                         />
                         <Stack.Screen
                             name='Register'

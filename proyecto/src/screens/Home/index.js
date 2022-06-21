@@ -33,24 +33,37 @@ class Home extends Component {
 
     render() {
         const {styles} = this.props.route.params
-
-        console.log(this.state.posts)
         return (
             <View style={styles.screen}>
-                <Text style={styles.containerHeader}>Welcome back! Let's check what has been going on</Text>
-                <View style={styles.prueba}>
-                    <FlatList
-                        data={this.state.posts}
-                        keyExtractor={item => item.id.toString()} 
-                        renderItem ={({item}) =>
-                            <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
-                        }
-                    />
+            {this.state.loading ?
+
+                <ActivityIndicator size='small' color='white'/> :
+
+                <View style={styles.screen}>
+                    <Text style={styles.containerHeader}>Welcome back! Let's check what has been going on</Text>
+                    <View style={styles.prueba}>
+                        <FlatList
+                            data={this.state.posts}
+                            keyExtractor={item => item.id.toString()} 
+                            renderItem ={({item}) =>
+                                <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
+                            }
+                        />
+                    </View>
                 </View>
+            }
             </View>
+                
         )
     }
 
 }
 
 export default Home;
+
+const styles = StyleSheet.create({
+    screen: {
+        backgroundColor: '#202020',
+        height: '100%'
+      },
+})

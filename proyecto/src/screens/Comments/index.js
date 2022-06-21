@@ -26,7 +26,7 @@ class Comments extends Component{
         })
     }
 
-    onSubmit(){
+    createComment(){
         const idDoc = this.props.route.params.id
         const dataComment = {
             owner: auth.currentUser.email,
@@ -36,10 +36,10 @@ class Comments extends Component{
         db.collection("posts").doc(idDoc).update({
             comentarios: firebase.firestore.FieldValue.arrayUnion(dataComment)
         })
+        .then(response => this.setState({newComment: ""}))
+        .catch(error => console.log(error))
         //limpiamos el input
-        this.setState({
-            newComment: ""
-        })
+        
     }
 
     render(){
@@ -69,7 +69,7 @@ class Comments extends Component{
                         <TouchableOpacity style={styles.inactiveButton}>
                             <Feather name="send" size={24} color="#202020" />
                         </TouchableOpacity> :
-                        <TouchableOpacity style={styles.button} onPress={() => this.onSubmit()}>
+                        <TouchableOpacity style={styles.button} onPress={() => this.createComment()}>
                             <Feather name="send" size={24} color="#202020" />
                         </TouchableOpacity>
                     }
