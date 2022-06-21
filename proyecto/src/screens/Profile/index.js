@@ -13,6 +13,7 @@ class Profile extends Component{
         super(props)
         this.state = {
             userPosts: [],
+            orderedPosts: [],
             loading: true,
             userInfo: {},
             display: "grid"
@@ -32,8 +33,29 @@ class Profile extends Component{
                 this.setState({
                     userPosts: posts,
                     loading: false
+                },
+                () => {
+                    const posts = this.state.userPosts;
+                    const postsCreatedAt = []
+                    const orderedPosts = []
+
+                    posts.forEach( post => {
+                        postsCreatedAt.push(post.data.createdAt)
+                    })
+
+                    postsCreatedAt.sort()
+
+                    postsCreatedAt.forEach( post => {
+                        orderedPosts.push(posts.find( date => date.data.createdAt === post))
+                    })
+
+                    this.setState({
+                        orderedPosts: orderedPosts
+                    })
                 })
             })
+
+        
         
         db.collection("users").where("owner", "==", auth.currentUser.email).onSnapshot(
             docs =>{
@@ -46,7 +68,29 @@ class Profile extends Component{
         )
     }
 
-    
+    // orderPostsByDate(){
+    //     // Recordemos que el where() y orderBy() son compatibles si se aplican sobre el mismo campo
+    //     const posts = this.state.userPosts;
+    //     const postsCreatedAt = []
+    //     const orderedPosts = []
+
+    //     posts.forEach( post => {
+    //         postsCreatedAt.push(post.data.createdAt)
+    //     })
+
+    //     postsCreatedAt.sort()
+
+    //     postsCreatedAt.forEach( post => {
+    //         orderedPosts.push(posts.find( date => date.data.createdAt === post))
+    //     })
+
+    //     // this.setState({
+    //     //     orderedPosts: orderedPosts
+    //     // })
+
+    //     return orderedPosts
+
+    // }
 
     changeDisplay(){
         if (this.state.display === 'grid') {
@@ -65,7 +109,8 @@ class Profile extends Component{
         const now = moment()
         const session = now.diff(lastSignIn, 'minutes')
         const creationTime = moment(auth.currentUser.metadata.creationTime).format('MMMM D, YYYY')
-        
+        console.log(this.state.orderedPosts)
+
         return (
             <View style={styles.screen}>
 
@@ -114,7 +159,7 @@ class Profile extends Component{
                             <View style={styles.flatListGridContainer}>
                                 <FlatList
                                     style={styles.flatListGrid}
-                                    data={this.state.userPosts}
+                                    data={this.state.orderedPosts}
                                     key={'g'}
                                     numColumns={3}
                                     keyExtractor={item => item.id.toString()} 
@@ -129,7 +174,7 @@ class Profile extends Component{
                             </View>:
                             <View style={styles.flatListColumnContainer}>
                                 <FlatList
-                                    data={this.state.userPosts}
+                                    data={this.state.orderedPosts}
                                     key={'c'}
                                     keyExtractor={item => item.id.toString()} 
                                     renderItem ={({item}) =>
