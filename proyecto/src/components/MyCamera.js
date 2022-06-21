@@ -57,9 +57,8 @@ class MyCamera extends Component{
     discardPicture(){
         this.setState({
             imageUri: "",
-            showCamera: true
-        })
-        this.props.manageChildCamera(false)
+        },
+        () => this.props.manageChildCamera(false))
     }
 
     render(){

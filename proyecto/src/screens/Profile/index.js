@@ -37,18 +37,16 @@ class Profile extends Component{
         
         db.collection("users").where("owner", "==", auth.currentUser.email).onSnapshot(
             docs =>{
-             
                 docs.forEach( doc => {
-                 
                     this.setState({
                         userInfo: doc.data()
                     })
-                }
-
-                )
+                })
             }
         )
     }
+
+    
 
     changeDisplay(){
         if (this.state.display === 'grid') {
@@ -62,105 +60,88 @@ class Profile extends Component{
         }
     }
 
-    sinceLastLogin(){
-        let previousLogin = auth.currentUser.metadata.lastSignInTime
-        let actualLogin = parseInt(Date.now())
-
-        // -- Math.trunc() se queda con la parte entera de la division -- //
-        let seconds = Math.trunc(actualLogin / 1000) 
-        let minutes = Math.trunc(seconds / 60)
-        let hours = Math.trunc(minutes / 60)
-        let days = Math.trunc(hours / 24)
-        return days
-    }
-
     render() {
         const lastSignIn = moment(auth.currentUser.metadata.lastSignInTime)
         const now = moment()
         const session = now.diff(lastSignIn, 'minutes')
         const creationTime = moment(auth.currentUser.metadata.creationTime).format('MMMM D, YYYY')
-        // console.log(this.state.userPosts)
-        // console.log(auth.currentUser.metadata.lastSignInTime)
+        
         return (
             <View style={styles.screen}>
 
                 {this.state.loading ?
-                    <ActivityIndicator size='small' color='white'/>
-                    :
-
-                    <View>
-
-                        <View style={styles.top}>
-                            <View style={styles.userInfoContainer}>
-                                <Text style={styles.userName}>
-                                    @{this.state.userInfo.username}
-                                </Text>
-                                <Text style={styles.text}>
-                                    You have been in session for {session} minutes.
-                                </Text>
-                                <Text style={styles.text}>
-                                    Joined: {creationTime}
-                                </Text>
-                                <Text style={styles.text}>
-                                    Posts: {this.state.userPosts.length}
-                                </Text>
-                                <TouchableOpacity onPress={() => this.props.route.params.logout()}>
-                                    <Feather name="log-out" size={20} color="white" />
-                                </TouchableOpacity>
-                            </View>
-
-                            {this.state.userPosts.length > 0 ?
-                                <TouchableOpacity style={styles.button} onPress={() => this.changeDisplay()}>
-                                    {this.state.display === 'grid' ?
-                                            <Feather name="menu" size={24} color="white" /> :
-                                            <Feather name="grid" size={24} color="white" />
-                                    }
-                                </TouchableOpacity> :
-                            <></>}
-                    
+                <ActivityIndicator size='small' color='white'/>
+                :
+                <View style={styles.screen}>
+                    <View style={styles.top}>
+                        <View style={styles.userInfoContainer}>
+                            <Text style={styles.userName}>
+                                @{this.state.userInfo.username}
+                            </Text>
+                            <Text style={styles.text}>
+                                You have been in session for {session} minutes.
+                            </Text>
+                            <Text style={styles.text}>
+                                Joined: {creationTime}
+                            </Text>
+                            <Text style={styles.text}>
+                                Posts: {this.state.userPosts.length}
+                            </Text>
+                            <TouchableOpacity onPress={() => this.props.route.params.logout()}>
+                                <Feather name="log-out" size={20} color="white" />
+                            </TouchableOpacity>
                         </View>
 
-                        {this.state.userPosts.length === 0 ?
-
-                            <Text style={styles.noPosts}>No posts yet.</Text> :
-
-                            <View style={styles.mainContainer}>
-                        
-                                <View style={styles.flatListContainer}>
-                                    { this.state.display === 'grid' ?
-                                    <View style={styles.flatListGridContainer}>
-                                        <FlatList
-                                            style={styles.flatListGrid}
-                                            data={this.state.userPosts}
-                                            key={'g'}
-                                            numColumns={3}
-                                            keyExtractor={item => item.id.toString()} 
-                                            renderItem ={({item}) =>
-                                                <Image
-                                                    source={{uri: item.data.photo}}
-                                                    resizeMode="cover"
-                                                    style={styles.image}
-                                                />                             
-                                            }
-                                        /> 
-                                    </View>:
-                                    <View style={styles.flatListColumnContainer}>
-                                        <FlatList
-                                            data={this.state.userPosts}
-                                            key={'c'}
-                                            keyExtractor={item => item.id.toString()} 
-                                            renderItem ={({item}) =>
-                                                <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
-                                            }
-                                        />
-                                    </View>
-                                    }
-                                </View>
-                            </View>
+                        {this.state.userPosts.length > 0 ?
+                        <TouchableOpacity style={styles.button} onPress={() => this.changeDisplay()}>
+                            {this.state.display === 'grid' ?
+                                    <Feather name="menu" size={24} color="white" /> :
+                                    <Feather name="grid" size={24} color="white" />
+                            }
+                        </TouchableOpacity> :
+                        <></>
                         }
-
                     </View>
 
+                    {this.state.userPosts.length === 0 ?
+
+                    <Text style={styles.noPosts}>No posts yet.</Text> :
+
+                    <View style={styles.mainContainer}>
+                
+                        <View style={styles.flatListContainer}>
+                            { this.state.display === 'grid' ?
+                            <View style={styles.flatListGridContainer}>
+                                <FlatList
+                                    style={styles.flatListGrid}
+                                    data={this.state.userPosts}
+                                    key={'g'}
+                                    numColumns={3}
+                                    keyExtractor={item => item.id.toString()} 
+                                    renderItem ={({item}) =>
+                                        <Image
+                                            source={{uri: item.data.photo}}
+                                            resizeMode="cover"
+                                            style={styles.image}
+                                        />                             
+                                    }
+                                /> 
+                            </View>:
+                            <View style={styles.flatListColumnContainer}>
+                                <FlatList
+                                    data={this.state.userPosts}
+                                    key={'c'}
+                                    keyExtractor={item => item.id.toString()} 
+                                    renderItem ={({item}) =>
+                                        <Post navigation={this.props.navigation} postInfo={item} styles={styles}/>
+                                    }
+                                />
+                            </View>
+                            }
+                        </View>
+                    </View>
+                    }
+                </View>
                 }
             </View>
         )
@@ -176,7 +157,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     mainContainer: {
-        flex: 5
+        flex: 5,
     },
 
     userName: {

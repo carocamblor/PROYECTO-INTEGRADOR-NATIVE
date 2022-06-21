@@ -34,30 +34,9 @@ class Search extends Component{
         )
     }
 
-    // componentDidUpdate(){
-    //     this.manageSearch()
-    // }
-
-    onSubmit(){
-        db.collection("posts").where("useremail", "", this.state.searchText).onSnapshot(
-            docs => { 
-                let posts = [];
-                docs.forEach( doc => {
-                    posts.push({
-                        id: doc.id,
-                        data: doc.data()
-                    })
-                })
-                this.setState({
-                    posts1: posts
-                })
-            }
-        )
-    }
-
     manageSearch(searchInput){
         let posts = this.state.posts2;
-        let postsFiltered = []
+        let postsFiltered = [] 
         
         if (searchInput != ""){
             postsFiltered = posts.filter(function(post){
@@ -82,7 +61,6 @@ class Search extends Component{
                                 searchText: text
                             },
                             () => {
-                                console.log(text)
                                 this.manageSearch(text)})
                         }
                         value= {this.state.searchText}
